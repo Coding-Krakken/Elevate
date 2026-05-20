@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { CartItem, Product } from "@/types";
+import type { CartItem, Product, ProductQuantityOption } from "@/types";
 
 interface SiteStore {
   cartItems: CartItem[];
@@ -18,7 +18,7 @@ interface SiteStore {
   isLocationOpen: boolean;
   isRewardsOpen: boolean;
   toastMessage: string | null;
-  addToCart: (product: Product) => void;
+  addToCart: (product: Product, option: ProductQuantityOption) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;
   toggleCart: () => void;
@@ -39,28 +39,32 @@ export function SiteStoreProvider({ children }: { children: ReactNode }) {
   const [isRewardsOpen, setIsRewardsOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const addToCart = useCallback((product: Product) => {
+  const addToCart = useCallback((product: Product, option: ProductQuantityOption) => {
+    const cartItemId = `${product.id}:${option.id}`;
+
     setCartItems((prev) => {
-      const found = prev.find((item) => item.id === product.id);
+      const found = prev.find((item) => item.id === cartItemId);
       if (found) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item,
+          item.id === cartItemId ? { ...item, quantity: item.quantity + 1 } : item,
         );
       }
 
       return [
         ...prev,
         {
-          id: product.id,
+          id: cartItemId,
+          productId: product.id,
+          quantityId: option.id,
           name: product.name,
-          price: product.price,
-          size: product.size,
+          optionLabel: option.label,
+          price: option.price,
           image: product.image,
           quantity: 1,
         },
       ];
     });
-    setToastMessage(`${product.name} added to cart`);
+    setToastMessage(`${product.name} (${option.label}) added to cart`);
     setIsCartOpen(true);
   }, []);
 

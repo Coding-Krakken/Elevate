@@ -8,6 +8,26 @@ import { useSiteStore } from "@/hooks/useSiteStore";
 export function CartDrawer() {
   const { cartItems, isCartOpen, closeCart, removeFromCart, subtotal } = useSiteStore();
 
+  const handleCheckout = () => {
+    if (cartItems.length === 0) {
+      return;
+    }
+
+    const itemLines = cartItems.map(
+      (item) =>
+        `- ${item.quantity}x ${item.name} (${item.optionLabel}) - $${(item.price * item.quantity).toFixed(2)}`,
+    );
+
+    const message = [
+      "Hi! I want to check out with these items:",
+      ...itemLines,
+      `Subtotal: $${subtotal.toFixed(2)}`,
+    ].join("\n");
+
+    const smsUrl = `sms:?body=${encodeURIComponent(message)}`;
+    window.location.href = smsUrl;
+  };
+
   useEffect(() => {
     if (!isCartOpen) {
       return;
@@ -77,7 +97,7 @@ export function CartDrawer() {
                 />
                 <div>
                   <p className="text-sm font-semibold text-white">{item.name}</p>
-                  <p className="text-xs text-slate-400">{item.size}</p>
+                  <p className="text-xs text-slate-400">{item.optionLabel}</p>
                   <p className="mt-1 text-sm font-bold text-lime-300">${item.price}</p>
                 </div>
                 <div className="space-y-2 text-right">
@@ -101,13 +121,14 @@ export function CartDrawer() {
             <span className="text-lg font-black text-white">${subtotal.toFixed(2)}</span>
           </div>
           <button
-            disabled
-            className="w-full rounded-xl bg-lime-300/70 px-4 py-3 text-sm font-black tracking-[0.11em] text-black disabled:cursor-not-allowed"
+            disabled={cartItems.length === 0}
+            onClick={handleCheckout}
+            className="w-full rounded-xl bg-lime-300/70 px-4 py-3 text-sm font-black tracking-[0.11em] text-black disabled:cursor-not-allowed disabled:opacity-60"
           >
-            CHECKOUT DISABLED
+            CHECKOUT
           </button>
           <p className="mt-2 text-xs text-slate-400">
-            Demo mode only. No checkout, payment, or regulated-product shipping enabled.
+            Checkout opens your SMS app with your cart and subtotal prefilled.
           </p>
         </div>
       </aside>

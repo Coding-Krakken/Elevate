@@ -1,7 +1,13 @@
-import { products } from "@/data/products";
 import { ProductCard } from "@/components/products/ProductCard";
+import type { Product } from "@/types";
 
-export function FeaturedProducts({ selectedCategory }: { selectedCategory: string | null }) {
+export function FeaturedProducts({
+  selectedCategory,
+  products,
+}: {
+  selectedCategory: string | null;
+  products: Product[];
+}) {
   const filtered = selectedCategory
     ? products.filter((product) => product.category === selectedCategory)
     : products;

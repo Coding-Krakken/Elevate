@@ -25,6 +25,11 @@ const satisfy = Satisfy({
 export const metadata: Metadata = {
   title: "Elevate Cannabis Co. | Premium Dispensary",
   description: "Premium futuristic cannabis ecommerce demo homepage.",
+  icons: {
+    icon: "/file.svg",
+    shortcut: "/file.svg",
+    apple: "/file.svg",
+  },
 };
 
 export default function RootLayout({

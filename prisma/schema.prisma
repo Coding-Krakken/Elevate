@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// One-time invitation links with 2-hour expiration
+model InvitationLink {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  createdAt DateTime  @default(now())
+  expiresAt DateTime
+  used      Boolean   @default(false)
+  usedAt    DateTime?
+  deviceId  String?
+
+  @@index([token])
+  @@index([expiresAt])
+}
+
+// Registered devices with fingerprint and secure token
+model RegisteredDevice {
+  id           String    @id @default(cuid())
+  fingerprint  String
+  tokenHash    String    @unique
+  registeredAt DateTime  @default(now())
+  lastAccessAt DateTime  @default(now())
+  revokedAt    DateTime?
+
+  @@index([fingerprint])
+  @@index([tokenHash])
+}
+
+// Admin devices for authentication
+model AdminDevice {
+  id        String   @id @default(cuid())
+  deviceId  String   @unique
+  email     String?
+  createdAt DateTime @default(now())
+
+  @@index([deviceId])
+}

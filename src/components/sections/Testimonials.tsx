@@ -32,9 +32,9 @@ export function Testimonials() {
         </button>
         <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">
           {visible.map((review, idx) => (
-            <article key={`${review.id}-${idx}`} className="min-h-[118px] rounded-xl border border-white/12 bg-[#0e1419] p-3.5">
+            <article key={`${review.id}-${idx}`} className="min-h-[124px] rounded-xl border border-white/12 bg-[#0e1419] p-3.5">
               <StarRating count={review.rating} />
-              <p className="mt-2 text-[13px] leading-4 text-slate-200">&ldquo;{review.quote}&rdquo;</p>
+              <p className="mt-2 text-[12px] leading-4 text-slate-200">&ldquo;{review.quote}&rdquo;</p>
               <p className="mt-2 text-xs text-slate-400">- {review.name}</p>
             </article>
           ))}

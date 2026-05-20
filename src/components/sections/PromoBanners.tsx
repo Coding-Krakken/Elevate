@@ -1,15 +1,21 @@
 import Image from "next/image";
-import { promos } from "@/data/promos";
+import type { PromoItem } from "@/types";
 
-export function PromoBanners() {
+export function PromoBanners({ offers }: { offers: PromoItem[] }) {
   return (
     <section className="mt-3 grid gap-2.5 lg:grid-cols-3">
-      {promos.map((promo, index) => (
+      {offers.map((promo, index) => (
         <article
           key={promo.id}
-          className="relative min-h-[158px] overflow-hidden rounded-xl border border-white/15 bg-[#0d1318] p-4"
+          className="relative min-h-[162px] overflow-hidden rounded-xl border border-white/15 bg-[#0d1318] p-4"
         >
-          <Image src={promo.image} alt={promo.title} fill className="object-cover opacity-30" />
+          <Image
+            src={promo.image}
+            alt={promo.title}
+            fill
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className="object-cover opacity-30"
+          />
           <div
             className={`absolute inset-0 ${
               index === 1
@@ -19,11 +25,11 @@ export function PromoBanners() {
           />
           <div className="relative">
             <p className="text-xs font-bold tracking-[0.14em] text-lime-300">{promo.eyebrow}</p>
-            <h3 className="mt-1 text-[50px] font-black leading-[0.88] tracking-[0.05em] text-white">{promo.title}</h3>
+            <h3 className="mt-1 text-[52px] font-black leading-[0.88] tracking-[0.05em] text-white">{promo.title}</h3>
             <p className="text-sm font-semibold tracking-[0.11em] text-slate-200">{promo.subtitle}</p>
             {index === 1 ? (
               <p className="mt-3 inline-flex rounded-md border border-lime-300/45 bg-black/60 px-3 py-1.5 text-xs font-black tracking-[0.12em] text-lime-300">
-                USE CODE: ELEVATE25
+                {promo.code ? `USE CODE: ${promo.code}` : promo.cta}
               </p>
             ) : (
               <button className="mt-3 rounded-md bg-lime-300 px-4 py-2 text-xs font-black tracking-[0.12em] text-black">

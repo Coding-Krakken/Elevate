@@ -9,10 +9,12 @@ export const products: Product[] = [
     strain: "HYBRID",
     description: "Indoor micro-batch",
     thc: "THC 24.6%",
-    price: 45,
-    size: "1/8 oz",
-    image:
-      "https://images.unsplash.com/photo-1603909223429-69bb7101f420?auto=format&fit=crop&w=900&q=80",
+    quantities: [
+      { id: "1g", label: "1g", price: 18, isActive: true },
+      { id: "eighth", label: "1/8 oz", price: 45, isActive: true },
+      { id: "quarter", label: "1/4 oz", price: 80, isActive: true },
+    ],
+    image: "/images/product-neon-runtz.jpg",
     imagePosition: "center 42%",
   },
   {
@@ -23,10 +25,12 @@ export const products: Product[] = [
     strain: "SATIVA",
     description: "Premium greenhouse",
     thc: "THC 22.1%",
-    price: 42,
-    size: "1/8 oz",
-    image:
-      "https://images.unsplash.com/photo-1605046310080-c5cf60778f07?auto=format&fit=crop&w=900&q=80",
+    quantities: [
+      { id: "1g", label: "1g", price: 16, isActive: true },
+      { id: "eighth", label: "1/8 oz", price: 42, isActive: true },
+      { id: "quarter", label: "1/4 oz", price: 76, isActive: true },
+    ],
+    image: "/images/product-lemon-gelato.jpg",
     imagePosition: "center 40%",
   },
   {
@@ -37,10 +41,12 @@ export const products: Product[] = [
     strain: "INDICA",
     description: "Hand-trimmed",
     thc: "THC 26.3%",
-    price: 40,
-    size: "1/8 oz",
-    image:
-      "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?auto=format&fit=crop&w=900&q=80",
+    quantities: [
+      { id: "1g", label: "1g", price: 15, isActive: true },
+      { id: "eighth", label: "1/8 oz", price: 40, isActive: true },
+      { id: "quarter", label: "1/4 oz", price: 72, isActive: true },
+    ],
+    image: "/images/product-blackberry-kush.jpg",
     imagePosition: "center 36%",
   },
   {
@@ -51,10 +57,11 @@ export const products: Product[] = [
     strain: "SATIVA",
     description: "Strain-specific oil",
     thc: "THC 85.2%",
-    price: 35,
-    size: "1g",
-    image:
-      "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=900&q=80",
+    quantities: [
+      { id: "0_5g", label: "0.5g", price: 22, isActive: true },
+      { id: "1g", label: "1g", price: 35, isActive: true },
+    ],
+    image: "/images/product-citrus-breeze.jpg",
     imagePosition: "center 52%",
   },
   {
@@ -65,10 +72,12 @@ export const products: Product[] = [
     strain: "INDICA",
     description: "Blueberry flavor",
     thc: "10mg / Piece",
-    price: 22,
-    size: "10 Pack",
-    image:
-      "https://images.unsplash.com/photo-1622485481073-6314ce5f6db3?auto=format&fit=crop&w=900&q=80",
+    quantities: [
+      { id: "5_pack", label: "5 Pack", price: 14, isActive: true },
+      { id: "10_pack", label: "10 Pack", price: 22, isActive: true },
+      { id: "20_pack", label: "20 Pack", price: 40, isActive: true },
+    ],
+    image: "/images/product-midnight-gummies.jpg",
     imagePosition: "center 38%",
   },
 ];

@@ -1,22 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   ChevronDown,
   Leaf,
   MapPin,
-  Menu,
   ShoppingCart,
   User,
 } from "lucide-react";
-import { navLinks } from "@/data/navigation";
 import { useSiteStore } from "@/hooks/useSiteStore";
 import { LocationPopover } from "@/components/ui/LocationPopover";
-import { MobileNav } from "@/components/layout/MobileNav";
 
 export function Header() {
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const locationRef = useRef<HTMLDivElement | null>(null);
   const { cartCount, toggleCart, toggleLocation, isLocationOpen, closeLocation } = useSiteStore();
 
@@ -46,76 +42,53 @@ export function Header() {
   }, [closeLocation, isLocationOpen]);
 
   return (
-    <>
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#060a0e]/95 backdrop-blur">
-        <div className="mx-auto flex h-14 w-full max-w-[1540px] items-center gap-3 px-4 md:h-[60px] md:px-8">
-          <button
-            className="inline-flex rounded-md border border-white/15 p-2 text-slate-200 md:hidden"
-            onClick={() => setIsMobileNavOpen(true)}
-            aria-label="Open menu"
-          >
-            <Menu className="h-4 w-4" />
-          </button>
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#060a0e]/95 backdrop-blur">
+      <div className="mx-auto flex h-14 w-full max-w-[1540px] items-center gap-3 px-4 md:h-[60px] md:px-8">
+        <Link href="#" className="group flex min-w-[190px] items-center gap-2">
+          <Leaf className="h-7 w-7 text-lime-300" />
+          <div>
+            <p className="text-lg font-black leading-none tracking-[0.22em] text-white">ELEVATE</p>
+            <p className="-mt-0.5 text-[9px] tracking-[0.2em] text-slate-400">CANNABIS CO.</p>
+          </div>
+        </Link>
 
-          <Link href="#" className="group flex min-w-[190px] items-center gap-2">
-            <Leaf className="h-7 w-7 text-lime-300" />
-            <div>
-              <p className="text-lg font-black leading-none tracking-[0.22em] text-white">ELEVATE</p>
-              <p className="-mt-0.5 text-[9px] tracking-[0.2em] text-slate-400">CANNABIS CO.</p>
-            </div>
+        <div className="ml-auto flex items-center gap-2 md:gap-3">
+          <div className="relative hidden md:block" ref={locationRef}>
+            <button
+              onClick={toggleLocation}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-left text-[10px] text-slate-200 transition hover:border-lime-300/60"
+              aria-label="Select location"
+            >
+              <MapPin className="h-3.5 w-3.5 text-lime-300" />
+              <span>
+                <span className="block text-[9px] text-slate-400">Deliver to</span>
+                <span className="block font-semibold">West Hollywood, CA</span>
+              </span>
+              <ChevronDown className="h-3 w-3" />
+            </button>
+            <LocationPopover />
+          </div>
+
+          <Link
+            href="/admin"
+            className="rounded-full border border-white/15 p-2 text-slate-200 transition hover:border-lime-300/60 hover:text-lime-300"
+            aria-label="Account"
+          >
+            <User className="h-4 w-4" />
           </Link>
 
-          <nav className="hidden flex-1 items-center justify-center gap-8 lg:flex">
-            {navLinks.map((link) => (
-              <Link
-                href="#"
-                key={link.label}
-                className="inline-flex items-center gap-1 text-[11px] font-bold tracking-[0.13em] text-slate-200 transition hover:text-lime-300"
-              >
-                {link.label}
-                {link.hasChevron ? <ChevronDown className="h-3 w-3" /> : null}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="ml-auto flex items-center gap-2 md:gap-3">
-            <div className="relative hidden md:block" ref={locationRef}>
-              <button
-                onClick={toggleLocation}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-left text-[10px] text-slate-200 transition hover:border-lime-300/60"
-                aria-label="Select location"
-              >
-                <MapPin className="h-3.5 w-3.5 text-lime-300" />
-                <span>
-                  <span className="block text-[9px] text-slate-400">Deliver to</span>
-                  <span className="block font-semibold">West Hollywood, CA</span>
-                </span>
-                <ChevronDown className="h-3 w-3" />
-              </button>
-              <LocationPopover />
-            </div>
-
-            <button
-              className="rounded-full border border-white/15 p-2 text-slate-200 transition hover:border-lime-300/60 hover:text-lime-300"
-              aria-label="Account"
-            >
-              <User className="h-4 w-4" />
-            </button>
-
-            <button
-              className="relative rounded-full border border-white/15 p-2 text-slate-200 transition hover:border-lime-300/60 hover:text-lime-300"
-              aria-label="Open cart"
-              onClick={toggleCart}
-            >
-              <ShoppingCart className="h-4 w-4" />
-              <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-lime-300 px-1 text-[10px] font-black text-black">
-                {cartCount}
-              </span>
-            </button>
-          </div>
+          <button
+            className="relative rounded-full border border-white/15 p-2 text-slate-200 transition hover:border-lime-300/60 hover:text-lime-300"
+            aria-label="Open cart"
+            onClick={toggleCart}
+          >
+            <ShoppingCart className="h-4 w-4" />
+            <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-lime-300 px-1 text-[10px] font-black text-black">
+              {cartCount}
+            </span>
+          </button>
         </div>
-      </header>
-      <MobileNav open={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} links={navLinks} />
-    </>
+      </div>
+    </header>
   );
 }

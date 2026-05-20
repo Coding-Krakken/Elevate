@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSiteStore } from "@/hooks/useSiteStore";
@@ -14,6 +15,21 @@ const strainClasses = {
 
 export function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useSiteStore();
+  const activeQuantities = useMemo(
+    () => product.quantities.filter((option) => option.isActive),
+    [product.quantities],
+  );
+  const [selectedQuantityId, setSelectedQuantityId] = useState(activeQuantities[0]?.id ?? "");
+
+  useEffect(() => {
+    if (activeQuantities.some((option) => option.id === selectedQuantityId)) {
+      return;
+    }
+    setSelectedQuantityId(activeQuantities[0]?.id ?? "");
+  }, [activeQuantities, selectedQuantityId]);
+
+  const selectedQuantity = activeQuantities.find((option) => option.id === selectedQuantityId);
+  const canAdd = Boolean(selectedQuantity);
 
   return (
     <article className="group relative rounded-xl border border-white/10 bg-gradient-to-b from-[#11171d] to-[#0c1015] p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition hover:border-lime-300/40">
@@ -43,15 +59,39 @@ export function ProductCard({ product }: { product: Product }) {
       <p className="text-[11px] text-slate-400">{product.brand}</p>
       <p className="text-[10px] text-slate-500">{product.thc}</p>
 
+      <div className="mt-2 flex flex-wrap gap-1">
+        {activeQuantities.map((option) => {
+          const selected = option.id === selectedQuantityId;
+          return (
+            <button
+              key={option.id}
+              type="button"
+              onClick={() => setSelectedQuantityId(option.id)}
+              className={cn(
+                "rounded-full border px-2 py-0.5 text-[10px] font-semibold transition",
+                selected
+                  ? "border-lime-300/70 bg-lime-300/20 text-lime-200"
+                  : "border-white/20 bg-black/20 text-slate-300 hover:border-lime-300/40",
+              )}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+
       <div className="mt-2 flex items-end justify-between">
         <div>
-          <p className="text-[28px] font-black leading-none text-white">${product.price}</p>
-          <p className="text-[10px] text-slate-400">{product.size}</p>
+          <p className="text-[28px] font-black leading-none text-white">
+            ${selectedQuantity?.price ?? 0}
+          </p>
+          <p className="text-[10px] text-slate-400">{selectedQuantity?.label ?? "Unavailable"}</p>
         </div>
         <button
-          onClick={() => addToCart(product)}
+          onClick={() => selectedQuantity && addToCart(product, selectedQuantity)}
+          disabled={!canAdd}
           aria-label={`Add ${product.name} to cart`}
-          className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-lime-300 text-black transition hover:scale-110"
+          className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-lime-300 text-black transition hover:scale-110 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Plus className="h-4 w-4" />
         </button>

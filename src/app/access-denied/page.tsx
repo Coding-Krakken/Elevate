@@ -1,9 +1,11 @@
 export default function AccessDenied() {
   return (
-    <html>
+    <html lang="en">
       <head>
-        <title>Site Not Available</title>
-        <style>{`
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>This site can't be reached</title>
+        <style dangerouslySetInnerHTML={{__html: `
           * {
             margin: 0;
             padding: 0;
@@ -11,76 +13,57 @@ export default function AccessDenied() {
           }
           body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: #ffffff;
-            color: #333333;
-            line-height: 1.6;
-            padding: 40px 20px;
+            background: #fff;
+            color: #202124;
+            padding: 14px;
+            line-height: 20px;
           }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
+          #main-frame {
+            max-width: 640px;
           }
           h1 {
-            font-size: 24px;
-            font-weight: 600;
-            color: #1a1a1a;
+            color: #202124;
+            font-size: 1.5em;
+            font-weight: normal;
+            line-height: 1.25em;
             margin-bottom: 16px;
-            border-bottom: 1px solid #e5e5e5;
-            padding-bottom: 12px;
           }
           p {
-            font-size: 14px;
-            color: #666666;
-            margin-bottom: 12px;
+            font-size: .875em;
+            color: #5f6368;
+            margin-bottom: 11px;
           }
-          .info-box {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            padding: 16px;
-            margin-top: 24px;
+          strong {
+            color: #202124;
+            font-weight: normal;
           }
-          .info-box h2 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 12px;
+          ul {
+            margin: 0 0 1em 1.5em;
           }
-          .info-box p {
-            font-size: 13px;
-            color: #6c757d;
-            margin-bottom: 8px;
+          li {
+            margin-bottom: 0.5em;
+            color: #5f6368;
+            font-size: .875em;
           }
-          .error-code {
-            font-size: 12px;
-            color: #999999;
-            margin-top: 32px;
-            padding-top: 16px;
-            border-top: 1px solid #e5e5e5;
+          #error-information {
+            display: none;
           }
-        `}</style>
+          .icon {
+            display: none;
+          }
+        `}} />
       </head>
       <body>
-        <div className="container">
-          <h1>This site can't be reached</h1>
-          
-          <p>
-            The website at <strong>{typeof window !== 'undefined' ? window.location.hostname : 'this address'}</strong> is not currently available.
-          </p>
-          
-          <p>
-            This may be because:
-          </p>
-          
-          <div className="info-box">
-            <h2>Access Restricted</h2>
-            <p>• This domain requires authorization to access</p>
-            <p>• Your device is not registered for this site</p>
-            <p>• You may need an invitation link from the site administrator</p>
-          </div>
-          
-          <div className="error-code">
-            ERR_ACCESS_DENIED
+        <div id="main-frame">
+          <div id="main-content">
+            <div className="icon"></div>
+            <h1>This site can't be reached</h1>
+            <p>
+              Check if there is a typo in the domain name.
+            </p>
+            <div id="error-information">
+              <p>DNS_PROBE_FINISHED_NXDOMAIN</p>
+            </div>
           </div>
         </div>
       </body>

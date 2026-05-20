@@ -1,7 +1,7 @@
 /**
  * Get the base URL for the application
- * - In production (Vercel): Uses VERCEL_URL environment variable
- * - In development: Uses localhost with PORT or default 3000
+ * - Production: Uses PRODUCTION_URL environment variable (for invite links)
+ * - Preview/Development: Falls back to VERCEL_URL or localhost
  * - Handles both server-side and client-side contexts
  */
 export function getBaseUrl(): string {
@@ -10,7 +10,12 @@ export function getBaseUrl(): string {
     return window.location.origin;
   }
 
-  // Server-side: check for Vercel environment
+  // Server-side: prioritize PRODUCTION_URL for invite links
+  if (process.env.PRODUCTION_URL) {
+    return process.env.PRODUCTION_URL;
+  }
+
+  // Fallback to Vercel deployment URL
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }

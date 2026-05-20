@@ -1,0 +1,61 @@
+"use client";
+
+import Image from "next/image";
+import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useSiteStore } from "@/hooks/useSiteStore";
+import type { Product } from "@/types";
+
+const strainClasses = {
+  HYBRID: "bg-lime-300/20 text-lime-200 border-lime-300/40",
+  SATIVA: "bg-yellow-300/20 text-yellow-100 border-yellow-300/40",
+  INDICA: "bg-purple-400/20 text-purple-100 border-purple-300/40",
+};
+
+export function ProductCard({ product }: { product: Product }) {
+  const { addToCart } = useSiteStore();
+
+  return (
+    <article className="group relative rounded-xl border border-white/10 bg-gradient-to-b from-[#11171d] to-[#0c1015] p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition hover:border-lime-300/40">
+      <span
+        className={cn(
+          "absolute left-3 top-3 z-10 rounded-full border px-2 py-0.5 text-[9px] font-bold tracking-[0.12em]",
+          strainClasses[product.strain],
+        )}
+      >
+        {product.strain}
+      </span>
+
+      <div className="relative mb-2 h-[100px] overflow-hidden rounded-lg border border-white/10 bg-black/20">
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          sizes="220px"
+          className="object-cover transition duration-500 group-hover:scale-105"
+          style={{ objectPosition: product.imagePosition ?? "center" }}
+        />
+        <div className="absolute inset-0 bg-black/15" />
+        <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/65 to-transparent" />
+      </div>
+
+      <h3 className="line-clamp-1 text-[15px] font-bold leading-tight text-white">{product.name}</h3>
+      <p className="text-[11px] text-slate-400">{product.brand}</p>
+      <p className="text-[10px] text-slate-500">{product.thc}</p>
+
+      <div className="mt-2 flex items-end justify-between">
+        <div>
+          <p className="text-[28px] font-black leading-none text-white">${product.price}</p>
+          <p className="text-[10px] text-slate-400">{product.size}</p>
+        </div>
+        <button
+          onClick={() => addToCart(product)}
+          aria-label={`Add ${product.name} to cart`}
+          className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-lime-300 text-black transition hover:scale-110"
+        >
+          <Plus className="h-4 w-4" />
+        </button>
+      </div>
+    </article>
+  );
+}

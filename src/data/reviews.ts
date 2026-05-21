@@ -12,7 +12,7 @@ export const reviews: Review[] = [
     id: "brandon-t",
     name: "Brandon T.",
     quote:
-      "Elevate is my go-to. Amazing deals, great customer service, and the products never disappoint.",
+      "Syracuse Exoticz is my go-to. Amazing deals, great customer service, and the products never disappoint.",
     rating: 5,
   },
   {
@@ -26,7 +26,7 @@ export const reviews: Review[] = [
     id: "natalie-r",
     name: "Natalie R.",
     quote:
-      "Love the vibe and the selection. Elevate really lives up to their name.",
+      "Love the vibe and the selection. Syracuse Exoticz really lives up to their name.",
     rating: 5,
   },
 ];

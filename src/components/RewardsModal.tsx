@@ -42,7 +42,7 @@ export function RewardsModal() {
         aria-label="Rewards signup information"
       >
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-black tracking-[0.15em] text-white">ELEVATE REWARDS</h3>
+          <h3 className="text-xl font-black tracking-[0.15em] text-white">SYRACUSE EXOTICZ REWARDS</h3>
           <button
             className="rounded-md border border-white/15 p-2 text-slate-300"
             onClick={closeRewards}

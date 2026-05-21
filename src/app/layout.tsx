@@ -23,7 +23,7 @@ const satisfy = Satisfy({
 });
 
 export const metadata: Metadata = {
-  title: "Elevate Cannabis Co. | Premium Dispensary",
+  title: "Syracuse Exoticz | Premium Dispensary",
   description: "Premium futuristic cannabis ecommerce demo homepage.",
   icons: {
     icon: "/file.svg",

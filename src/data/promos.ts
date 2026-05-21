@@ -14,8 +14,8 @@ export const promos: PromoItem[] = [
     eyebrow: "NEW CUSTOMER SPECIAL",
     title: "25% OFF",
     subtitle: "YOUR FIRST ORDER",
-    cta: "USE CODE: ELEVATE25",
-    code: "ELEVATE25",
+    cta: "USE CODE: SYRACUSE25",
+    code: "SYRACUSE25",
     image: "/images/promo-new-customer.jpg",
   },
   {

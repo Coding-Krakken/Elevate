@@ -25,8 +25,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // For all other routes, check if device cookie exists
-  const deviceCookie = request.cookies.get('elevate_device_token');
+  // For all other routes, check if either current or legacy device cookie exists
+  const deviceCookie =
+    request.cookies.get('syracuse_exoticz_device_token') ??
+    request.cookies.get('elevate_device_token');
 
   if (!deviceCookie) {
     // No device cookie, redirect to access denied

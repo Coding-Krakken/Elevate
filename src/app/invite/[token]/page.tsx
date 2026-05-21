@@ -93,10 +93,10 @@ export default function InvitePage({ params }: InvitePageProps) {
             <Leaf className="h-12 w-12 text-lime-300" />
             <div className="text-left">
               <p className="text-2xl font-black leading-none tracking-[0.22em] text-white">
-                ELEVATE
+                SYRACUSE
               </p>
               <p className="text-xs tracking-[0.2em] text-slate-400">
-                CANNABIS CO.
+                EXOTICZ
               </p>
             </div>
           </div>
@@ -132,7 +132,7 @@ export default function InvitePage({ params }: InvitePageProps) {
         {status === 'success' && (
           <>
             <h1 className="text-3xl font-bold text-white mb-4">
-              Welcome to Elevate!
+              Welcome to Syracuse Exoticz!
             </h1>
             <p className="text-slate-300 mb-2">
               Your device has been successfully registered.

@@ -13,8 +13,8 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <Leaf className="h-8 w-8 text-lime-300" />
               <div>
-                <p className="text-xl font-black tracking-[0.22em] text-white">ELEVATE</p>
-                <p className="text-[10px] tracking-[0.2em] text-slate-400">CANNABIS CO.</p>
+                <p className="text-xl font-black tracking-[0.22em] text-white">SYRACUSE</p>
+                <p className="text-[10px] tracking-[0.2em] text-slate-400">EXOTICZ</p>
               </div>
             </div>
             <p className="mt-4 max-w-[220px] text-xs leading-5 tracking-[0.1em] text-slate-300">
@@ -27,7 +27,7 @@ export function Footer() {
 
         <p className="mt-4 text-xs text-slate-400">18+ | For adults 21+ only. Keep out of reach of children. Follow all local laws.</p>
 
-        <p className="mt-3 text-xs text-slate-500">© 2024 Elevate Cannabis Co. All rights reserved.</p>
+        <p className="mt-3 text-xs text-slate-500">© 2024 Syracuse Exoticz. All rights reserved.</p>
       </div>
     </footer>
   );

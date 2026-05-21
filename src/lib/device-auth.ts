@@ -2,7 +2,8 @@ import { compare, hash } from 'bcryptjs';
 import { cookies } from 'next/headers';
 import crypto from 'crypto';
 
-const COOKIE_NAME = 'elevate_device_token';
+const COOKIE_NAME = 'syracuse_exoticz_device_token';
+const LEGACY_COOKIE_NAME = 'elevate_device_token';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
 
 /**
@@ -50,7 +51,7 @@ export async function setDeviceCookie(token: string): Promise<void> {
  */
 export async function getDeviceCookie(): Promise<string | undefined> {
   const cookieStore = await cookies();
-  return cookieStore.get(COOKIE_NAME)?.value;
+  return cookieStore.get(COOKIE_NAME)?.value ?? cookieStore.get(LEGACY_COOKIE_NAME)?.value;
 }
 
 /**
@@ -59,6 +60,7 @@ export async function getDeviceCookie(): Promise<string | undefined> {
 export async function removeDeviceCookie(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete(COOKIE_NAME);
+  cookieStore.delete(LEGACY_COOKIE_NAME);
 }
 
 /**

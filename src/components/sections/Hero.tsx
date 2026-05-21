@@ -17,7 +17,7 @@ export function Hero() {
 
       <div className="relative grid items-end gap-4 lg:min-h-[370px] lg:grid-cols-[0.92fr_1.28fr]">
         <div className="pt-1 lg:max-w-[620px] lg:pb-3">
-          <h1 className="text-[58px] font-black leading-none tracking-[0.13em] text-white md:text-[92px]">ELEVATE</h1>
+          <h1 className="text-[58px] font-black leading-none tracking-[0.13em] text-white md:text-[92px]">SYRACUSE</h1>
           <p className="mt-1 text-[38px] font-black tracking-[0.15em] text-lime-300 md:text-[54px]">YOUR EXPERIENCE</p>
           <p className="mt-3 text-[15px] font-semibold tracking-[0.1em] text-slate-200">
             PREMIUM CANNABIS. UNMATCHED VIBES.

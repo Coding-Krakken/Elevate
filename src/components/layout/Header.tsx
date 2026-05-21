@@ -47,8 +47,8 @@ export function Header() {
         <Link href="#" className="group flex min-w-[190px] items-center gap-2">
           <Leaf className="h-7 w-7 text-lime-300" />
           <div>
-            <p className="text-lg font-black leading-none tracking-[0.22em] text-white">ELEVATE</p>
-            <p className="-mt-0.5 text-[9px] tracking-[0.2em] text-slate-400">CANNABIS CO.</p>
+            <p className="text-lg font-black leading-none tracking-[0.22em] text-white">SYRACUSE</p>
+            <p className="-mt-0.5 text-[9px] tracking-[0.2em] text-slate-400">EXOTICZ</p>
           </div>
         </Link>
 

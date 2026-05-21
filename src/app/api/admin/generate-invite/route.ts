@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     // Format the SMS message
     const expirationTime = format(expiresAt, 'h:mm a');
-    const smsMessage = `You've been invited to Elevate Cannabis Co!\n\nClick here to access: ${inviteUrl}\n\nThis link expires at ${expirationTime} and can only be used once.`;
+    const smsMessage = `You've been invited to Syracuse Exoticz!\n\nClick here to access: ${inviteUrl}\n\nThis link expires at ${expirationTime} and can only be used once.`;
 
     return NextResponse.json({
       success: true,

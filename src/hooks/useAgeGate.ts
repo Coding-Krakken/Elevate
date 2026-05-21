@@ -2,14 +2,26 @@
 
 import { useState } from "react";
 
-const STORAGE_KEY = "elevate.ageGateAccepted";
+const STORAGE_KEY = "syracuse-exoticz.ageGateAccepted";
+const LEGACY_STORAGE_KEY = "elevate.ageGateAccepted";
 
 export function useAgeGate() {
   const [accepted, setAccepted] = useState<boolean>(() => {
     if (typeof window === "undefined") {
       return false;
     }
-    return window.localStorage.getItem(STORAGE_KEY) === "true";
+    const current = window.localStorage.getItem(STORAGE_KEY) === "true";
+    if (current) {
+      return true;
+    }
+
+    const legacy = window.localStorage.getItem(LEGACY_STORAGE_KEY) === "true";
+    if (legacy) {
+      window.localStorage.setItem(STORAGE_KEY, "true");
+      window.localStorage.removeItem(LEGACY_STORAGE_KEY);
+    }
+
+    return legacy;
   });
 
   const accept = () => {

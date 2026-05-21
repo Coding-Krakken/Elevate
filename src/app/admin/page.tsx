@@ -14,9 +14,10 @@ import ShareButton from "@/components/admin/ShareButton";
 import { generateDeviceFingerprint } from "@/lib/fingerprint";
 
 const inputClass = "w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm text-white";
-const ADMIN_USERNAME = "admin@elevate.com";
+const ADMIN_USERNAME = "admin@syracuseexoticz.com";
 const ADMIN_PASSWORD = "admin420";
-const AUTH_KEY = "elevate-admin-auth-v1";
+const AUTH_KEY = "syracuse-exoticz-admin-auth-v1";
+const LEGACY_AUTH_KEY = "elevate-admin-auth-v1";
 
 export default function AdminPage() {
   const [username, setUsername] = useState("");
@@ -41,8 +42,13 @@ export default function AdminPage() {
 
   useEffect(() => {
     const value = window.localStorage.getItem(AUTH_KEY);
+    const legacyValue = window.localStorage.getItem(LEGACY_AUTH_KEY);
+    if (!value && legacyValue === "true") {
+      window.localStorage.setItem(AUTH_KEY, "true");
+      window.localStorage.removeItem(LEGACY_AUTH_KEY);
+    }
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsAuthed(value === "true");
+    setIsAuthed(value === "true" || legacyValue === "true");
     setIsReady(true);
   }, []);
 
@@ -86,6 +92,7 @@ export default function AdminPage() {
 
   const handleLogout = () => {
     window.localStorage.removeItem(AUTH_KEY);
+    window.localStorage.removeItem(LEGACY_AUTH_KEY);
     setIsAuthed(false);
     setUsername("");
     setPassword("");

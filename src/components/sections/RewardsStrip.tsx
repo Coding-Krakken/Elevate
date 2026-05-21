@@ -17,7 +17,7 @@ export function RewardsStrip() {
     <section className="mt-3 rounded-xl border border-white/10 bg-[#0d1318] px-4 py-2.5">
       <div className="grid gap-2 xl:grid-cols-[1.05fr_2.2fr_auto] xl:items-center">
         <div className="xl:border-r xl:border-white/10 xl:pr-4">
-          <p className="text-[36px] font-black leading-none tracking-[0.08em] text-lime-300">ELEVATE REWARDS</p>
+          <p className="text-[36px] font-black leading-none tracking-[0.08em] text-lime-300">SYRACUSE EXOTICZ REWARDS</p>
           <p className="text-[11px] tracking-[0.11em] text-slate-300">MORE POINTS. MORE PERKS. MORE ELEVATION.</p>
         </div>
         <div className="grid gap-1.5 sm:grid-cols-2 lg:grid-cols-4 xl:gap-0">

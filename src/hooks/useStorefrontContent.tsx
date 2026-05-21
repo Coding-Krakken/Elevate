@@ -13,7 +13,8 @@ import { products } from "@/data/products";
 import { promos } from "@/data/promos";
 import type { ManagedOffer, ManagedProduct, ProductQuantityOption, StorefrontConfig } from "@/types";
 
-const STORAGE_KEY = "elevate-storefront-content-v1";
+const STORAGE_KEY = "syracuse-exoticz-storefront-content-v1";
+const LEGACY_STORAGE_KEY = "elevate-storefront-content-v1";
 
 interface StorefrontState {
   products: ManagedProduct[];
@@ -36,7 +37,7 @@ const defaultState: StorefrontState = {
   products: products.map((product) => ({ ...product, isActive: true })),
   offers: promos.map((offer) => ({ ...offer, isActive: true })),
   config: {
-    pageTitle: "Elevate Main Storefront",
+    pageTitle: "Syracuse Exoticz Main Storefront",
     pageSubtitle: "Browse every available product and active deals in one place.",
     showProducts: true,
     showOffers: true,
@@ -89,7 +90,7 @@ export function StorefrontContentProvider({ children }: { children: ReactNode })
 
   useEffect(() => {
     try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
+      const raw = window.localStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem(LEGACY_STORAGE_KEY);
       if (!raw) {
         return;
       }
@@ -101,6 +102,8 @@ export function StorefrontContentProvider({ children }: { children: ReactNode })
         ...parsed,
         products: parsed.products.map((product) => ensureProductQuantities(product)),
       };
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+      window.localStorage.removeItem(LEGACY_STORAGE_KEY);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setState(migrated);
     } catch {}

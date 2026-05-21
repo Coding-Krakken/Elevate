@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Satisfy, Space_Grotesk } from "next/font/google";
+import { Inter, Orbitron, Satisfy, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { SiteProvider } from "@/components/providers/SiteProvider";
 import { TopBar } from "@/components/layout/TopBar";
@@ -22,6 +22,12 @@ const satisfy = Satisfy({
   weight: "400",
 });
 
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
+  subsets: ["latin"],
+  weight: ["800", "900"],
+});
+
 export const metadata: Metadata = {
   title: "Syracuse Exoticz | Premium Dispensary",
   description: "Premium futuristic cannabis ecommerce demo homepage.",
@@ -38,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${satisfy.variable} h-full antialiased`}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${satisfy.variable} ${orbitron.variable} h-full antialiased`}>
       <body className="min-h-full bg-[#050708] text-white">
         <a href="#main-content" className="skip-link">
           Skip to content

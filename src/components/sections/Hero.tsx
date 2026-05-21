@@ -17,8 +17,13 @@ export function Hero() {
 
       <div className="relative grid items-end gap-4 lg:min-h-[370px] lg:grid-cols-[0.92fr_1.28fr]">
         <div className="pt-1 lg:max-w-[620px] lg:pb-3">
-          <h1 className="text-[58px] font-black leading-none tracking-[0.13em] text-white md:text-[92px]">SYRACUSE</h1>
-          <p className="mt-1 text-[38px] font-black tracking-[0.15em] text-lime-300 md:text-[54px]">YOUR EXPERIENCE</p>
+          <h1
+            className="m-0 text-[clamp(2rem,8.2vw,8.3rem)] font-black uppercase leading-[0.86] tracking-[0.1em] max-[767px]:leading-[0.9] max-[767px]:tracking-[0.08em]"
+            style={{ fontFamily: 'var(--font-orbitron), "Orbitron", "Eurostile Extended", "Microgramma D Extended", "Bank Gothic", sans-serif' }}
+          >
+            <span className="block text-[#f4f4f4]">ELEVATE</span>
+            <span className="block text-[#7cff00] [text-shadow:0_0_8px_rgba(124,255,0,0.35),0_0_18px_rgba(124,255,0,0.22)]">EVERY MOMENT</span>
+          </h1>
           <p className="mt-3 text-[15px] font-semibold tracking-[0.1em] text-slate-200">
             PREMIUM CANNABIS. UNMATCHED VIBES.
           </p>

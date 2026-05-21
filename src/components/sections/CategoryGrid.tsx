@@ -11,6 +11,7 @@ import {
   SprayCan,
 } from "lucide-react";
 import { categories } from "@/data/categories";
+import { homePageContent } from "@/data/homepage";
 import { cn } from "@/lib/utils";
 
 const icons = {
@@ -30,15 +31,17 @@ interface CategoryGridProps {
 }
 
 export function CategoryGrid({ selectedCategory, onSelectCategory }: CategoryGridProps) {
+  const { sections } = homePageContent;
+
   return (
     <section>
       <div className="mb-2.5 flex items-center justify-between">
-        <h2 className="text-sm font-black tracking-[0.16em] text-white">SHOP BY CATEGORY</h2>
+        <h2 className="text-sm font-black tracking-[0.16em] text-white">{sections.categoriesTitle}</h2>
         <button
           className="text-[10px] font-bold tracking-[0.12em] text-lime-300"
           onClick={() => onSelectCategory(null)}
         >
-          VIEW ALL
+          {sections.categoriesViewAllLabel}
         </button>
       </div>
       <div className="grid grid-cols-2 gap-2">

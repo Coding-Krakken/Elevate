@@ -1,7 +1,10 @@
 import Image from "next/image";
 import { Leaf, ShieldCheck, Sparkles } from "lucide-react";
+import { homePageContent } from "@/data/homepage";
 
 export function Hero() {
+  const { hero } = homePageContent;
+
   return (
     <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#060a0b] px-4 py-5 md:px-6 md:py-6">
       <Image
@@ -21,19 +24,19 @@ export function Hero() {
             className="m-0 text-[clamp(2rem,8.2vw,8.3rem)] font-black uppercase leading-[0.86] tracking-[0.1em] max-[767px]:leading-[0.9] max-[767px]:tracking-[0.08em]"
             style={{ fontFamily: 'var(--font-orbitron), "Orbitron", "Eurostile Extended", "Microgramma D Extended", "Bank Gothic", sans-serif' }}
           >
-            <span className="block text-[#f4f4f4]">ELEVATE</span>
-            <span className="block text-[#7cff00] [text-shadow:0_0_8px_rgba(124,255,0,0.35),0_0_18px_rgba(124,255,0,0.22)]">EVERY MOMENT</span>
+            <span className="block text-[#f4f4f4]">{hero.titleLine1}</span>
+            <span className="block text-[#7cff00] [text-shadow:0_0_8px_rgba(124,255,0,0.35),0_0_18px_rgba(124,255,0,0.22)]">{hero.titleLine2}</span>
           </h1>
           <p className="mt-3 text-[15px] font-semibold tracking-[0.1em] text-slate-200">
-            PREMIUM CANNABIS. UNMATCHED VIBES.
+            {hero.subtitle}
           </p>
 
           <div className="mt-5 flex flex-wrap gap-3">
             <button className="rounded-md bg-lime-300 px-8 py-3 text-sm font-black tracking-[0.12em] text-black transition hover:bg-lime-200">
-              SHOP NOW
+              {hero.primaryCta}
             </button>
             <button className="rounded-md border border-lime-300/45 bg-black/35 px-8 py-3 text-sm font-black tracking-[0.12em] text-white transition hover:border-lime-300/80">
-              BROWSE DEALS
+              {hero.secondaryCta}
             </button>
           </div>
 
@@ -56,8 +59,8 @@ export function Hero() {
         <div className="relative min-h-[260px] md:min-h-[340px]">
 
           <div className="absolute right-[2%] top-[8%] text-right text-[54px] leading-[0.92] md:text-[72px]">
-            <p style={{ fontFamily: "var(--font-script)" }} className="text-fuchsia-300 [text-shadow:0_0_20px_rgba(176,38,255,0.82)]">Good VIBES</p>
-            <p style={{ fontFamily: "var(--font-script)" }} className="text-lime-300 [text-shadow:0_0_20px_rgba(156,255,46,0.82)]">Higher TIMES</p>
+            <p style={{ fontFamily: "var(--font-script)" }} className="text-fuchsia-300 [text-shadow:0_0_20px_rgba(176,38,255,0.82)]">{hero.scriptLine1}</p>
+            <p style={{ fontFamily: "var(--font-script)" }} className="text-lime-300 [text-shadow:0_0_20px_rgba(156,255,46,0.82)]">{hero.scriptLine2}</p>
           </div>
         </div>
       </div>

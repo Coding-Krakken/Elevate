@@ -2,11 +2,13 @@
 
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { homePageContent } from "@/data/homepage";
 import { reviews } from "@/data/reviews";
 import { StarRating } from "@/components/ui/StarRating";
 
 export function Testimonials() {
   const [index, setIndex] = useState(0);
+  const { sections } = homePageContent;
 
   const visible = useMemo(() => {
     const list = [...reviews, ...reviews];
@@ -16,9 +18,9 @@ export function Testimonials() {
   return (
     <section className="mt-3">
       <div className="mb-2.5 flex items-center justify-between">
-        <h2 className="text-sm font-black tracking-[0.16em] text-white">WHAT OUR CUSTOMERS SAY</h2>
+        <h2 className="text-sm font-black tracking-[0.16em] text-white">{sections.testimonialsTitle}</h2>
         <button className="inline-flex items-center gap-1 text-[11px] font-bold tracking-[0.12em] text-lime-300">
-          VIEW ALL REVIEWS
+          {sections.testimonialsViewAllLabel}
           <span aria-hidden>›</span>
         </button>
       </div>

@@ -15,7 +15,6 @@ interface SiteStore {
   cartCount: number;
   subtotal: number;
   isCartOpen: boolean;
-  isLocationOpen: boolean;
   isRewardsOpen: boolean;
   toastMessage: string | null;
   addToCart: (product: Product, option: ProductQuantityOption) => void;
@@ -23,8 +22,6 @@ interface SiteStore {
   clearCart: () => void;
   toggleCart: () => void;
   closeCart: () => void;
-  toggleLocation: () => void;
-  closeLocation: () => void;
   openRewards: () => void;
   closeRewards: () => void;
   closeToast: () => void;
@@ -35,7 +32,6 @@ const SiteStoreContext = createContext<SiteStore | null>(null);
 export function SiteStoreProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isRewardsOpen, setIsRewardsOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -84,14 +80,6 @@ export function SiteStoreProvider({ children }: { children: ReactNode }) {
     setIsCartOpen(false);
   }, []);
 
-  const toggleLocation = useCallback(() => {
-    setIsLocationOpen((prev) => !prev);
-  }, []);
-
-  const closeLocation = useCallback(() => {
-    setIsLocationOpen(false);
-  }, []);
-
   const openRewards = useCallback(() => {
     setIsRewardsOpen(true);
   }, []);
@@ -120,7 +108,6 @@ export function SiteStoreProvider({ children }: { children: ReactNode }) {
       cartCount,
       subtotal,
       isCartOpen,
-      isLocationOpen,
       isRewardsOpen,
       toastMessage,
       addToCart,
@@ -128,8 +115,6 @@ export function SiteStoreProvider({ children }: { children: ReactNode }) {
       clearCart,
       toggleCart,
       closeCart,
-      toggleLocation,
-      closeLocation,
       openRewards,
       closeRewards,
       closeToast,
@@ -140,18 +125,15 @@ export function SiteStoreProvider({ children }: { children: ReactNode }) {
       cartItems,
       clearCart,
       closeCart,
-      closeLocation,
       closeRewards,
       closeToast,
       isCartOpen,
-      isLocationOpen,
       isRewardsOpen,
       openRewards,
       removeFromCart,
       subtotal,
       toastMessage,
       toggleCart,
-      toggleLocation,
     ],
   );
 

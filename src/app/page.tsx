@@ -6,7 +6,6 @@ import { FulfillmentBar } from "@/components/sections/FulfillmentBar";
 import { FeaturedProducts } from "@/components/sections/FeaturedProducts";
 import { CategoryGrid } from "@/components/sections/CategoryGrid";
 import { PromoBanners } from "@/components/sections/PromoBanners";
-import { RewardsStrip } from "@/components/sections/RewardsStrip";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { useStorefrontContent } from "@/hooks/useStorefrontContent";
 
@@ -33,7 +32,6 @@ export default function Home() {
       ) : null}
 
       {config.showOffers ? <PromoBanners offers={activeOffers} /> : null}
-      <RewardsStrip />
       <Testimonials />
     </div>
   );

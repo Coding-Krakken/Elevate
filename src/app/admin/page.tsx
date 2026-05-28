@@ -21,6 +21,25 @@ const ADMIN_PASSWORD = "admin420";
 const AUTH_KEY = "syracuse-exoticz-admin-auth-v1";
 const LEGACY_AUTH_KEY = "elevate-admin-auth-v1";
 
+const productAccentThemes = [
+  {
+    card: "border-l-4 border-l-lime-300/70 bg-gradient-to-r from-lime-300/[0.06] via-[#091017] to-[#091017]",
+    badge: "border-lime-300/45 bg-lime-300/20 text-lime-200",
+  },
+  {
+    card: "border-l-4 border-l-cyan-300/70 bg-gradient-to-r from-cyan-300/[0.06] via-[#091017] to-[#091017]",
+    badge: "border-cyan-300/45 bg-cyan-300/20 text-cyan-100",
+  },
+  {
+    card: "border-l-4 border-l-amber-300/70 bg-gradient-to-r from-amber-300/[0.06] via-[#091017] to-[#091017]",
+    badge: "border-amber-300/45 bg-amber-300/20 text-amber-100",
+  },
+  {
+    card: "border-l-4 border-l-fuchsia-300/70 bg-gradient-to-r from-fuchsia-300/[0.06] via-[#091017] to-[#091017]",
+    badge: "border-fuchsia-300/45 bg-fuchsia-300/20 text-fuchsia-100",
+  },
+];
+
 export default function AdminPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -228,13 +247,15 @@ export default function AdminPage() {
           </button>
         </div>
 
-        <div className="space-y-5">
-          {products.map((product) => (
+        <div className="space-y-6">
+          {products.map((product, index) => (
             <ProductEditor
               key={product.id}
               product={product}
               onUpdate={updateProduct}
               onDelete={deleteProduct}
+              index={index}
+              total={products.length}
             />
           ))}
         </div>
@@ -288,10 +309,14 @@ function ProductEditor({
   product,
   onUpdate,
   onDelete,
+  index,
+  total,
 }: {
   product: ManagedProduct;
   onUpdate: (id: string, updates: Partial<ManagedProduct>) => void;
   onDelete: (id: string) => void;
+  index: number;
+  total: number;
 }) {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [previewFailed, setPreviewFailed] = useState(false);
@@ -419,10 +444,17 @@ function ProductEditor({
     onUpdate(product.id, { imagePosition: `${horizontal} ${vertical}` });
   };
 
+  const accent = productAccentThemes[index % productAccentThemes.length];
+
   return (
-    <article className="rounded-xl border border-white/25 bg-[#091017] p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_18px_42px_rgba(0,0,0,0.35)]">
+    <article className={`rounded-xl border border-white/25 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_18px_42px_rgba(0,0,0,0.35)] ${accent.card}`}>
       <div className="mb-3 flex items-center justify-between gap-2 border-b border-white/10 pb-2">
-        <p className="text-xs font-semibold tracking-[0.08em] text-slate-300">{product.id}</p>
+        <div className="flex items-center gap-2">
+          <span className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-black tracking-[0.12em] ${accent.badge}`}>
+            Product {index + 1} of {total}
+          </span>
+          <p className="text-xs font-semibold tracking-[0.08em] text-slate-300">{product.id}</p>
+        </div>
         <div className="flex items-center gap-3">
           <label className="inline-flex items-center gap-2 text-xs text-slate-200">
             <input

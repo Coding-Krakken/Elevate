@@ -31,6 +31,21 @@ export interface CategoryItem {
   icon: string;
 }
 
+export type OfferDiscountType = "percent" | "fixed";
+
+export interface OfferRules {
+  autoApply: boolean;
+  allowManualApply: boolean;
+  discountType: OfferDiscountType;
+  discountValue: number;
+  minSubtotal?: number;
+  startDate?: string;
+  endDate?: string;
+  startTime?: string;
+  endTime?: string;
+  daysOfWeek?: number[];
+}
+
 export interface PromoItem {
   id: string;
   eyebrow: string;
@@ -39,6 +54,7 @@ export interface PromoItem {
   cta: string;
   code?: string;
   image: string;
+  rules?: OfferRules;
 }
 
 export interface ManagedOffer extends PromoItem {
@@ -68,6 +84,13 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
+}
+
+export interface AppliedCartDeal {
+  id: string;
+  title: string;
+  amount: number;
+  source: "auto" | "manual";
 }
 
 // Device Registration & Invitation Types

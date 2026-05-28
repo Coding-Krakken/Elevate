@@ -1,7 +1,15 @@
 import Image from "next/image";
 import type { PromoItem } from "@/types";
 
-export function PromoBannerCard({ promo, index }: { promo: PromoItem; index: number }) {
+export function PromoBannerCard({
+  promo,
+  index,
+  onCtaClick,
+}: {
+  promo: PromoItem;
+  index: number;
+  onCtaClick?: (promo: PromoItem) => void;
+}) {
   return (
     <article className="relative min-h-[162px] overflow-hidden rounded-xl border border-white/15 bg-[#0d1318] p-4">
       <Image
@@ -23,11 +31,19 @@ export function PromoBannerCard({ promo, index }: { promo: PromoItem; index: num
         <h3 className="mt-1 text-[52px] font-black leading-[0.88] tracking-[0.05em] text-white">{promo.title}</h3>
         <p className="text-sm font-semibold tracking-[0.11em] text-slate-200">{promo.subtitle}</p>
         {index === 1 ? (
-          <p className="mt-3 inline-flex rounded-md border border-lime-300/45 bg-black/60 px-3 py-1.5 text-xs font-black tracking-[0.12em] text-lime-300">
+          <button
+            type="button"
+            onClick={() => onCtaClick?.(promo)}
+            className="mt-3 inline-flex rounded-md border border-lime-300/45 bg-black/60 px-3 py-1.5 text-xs font-black tracking-[0.12em] text-lime-300 transition hover:bg-lime-300/15"
+          >
             {promo.code ? `USE CODE: ${promo.code}` : promo.cta}
-          </p>
+          </button>
         ) : (
-          <button className="mt-3 rounded-md bg-lime-300 px-4 py-2 text-xs font-black tracking-[0.12em] text-black">
+          <button
+            type="button"
+            onClick={() => onCtaClick?.(promo)}
+            className="mt-3 rounded-md bg-lime-300 px-4 py-2 text-xs font-black tracking-[0.12em] text-black transition hover:bg-lime-200"
+          >
             {promo.cta}
           </button>
         )}
@@ -49,11 +65,17 @@ export function PromoBannerCard({ promo, index }: { promo: PromoItem; index: num
   );
 }
 
-export function PromoBanners({ offers }: { offers: PromoItem[] }) {
+export function PromoBanners({
+  offers,
+  onCtaClick,
+}: {
+  offers: PromoItem[];
+  onCtaClick?: (promo: PromoItem) => void;
+}) {
   return (
     <section className="mt-3 grid gap-2.5 lg:grid-cols-3">
       {offers.map((promo, index) => (
-        <PromoBannerCard key={promo.id} promo={promo} index={index} />
+        <PromoBannerCard key={promo.id} promo={promo} index={index} onCtaClick={onCtaClick} />
       ))}
     </section>
   );

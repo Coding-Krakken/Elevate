@@ -11,7 +11,7 @@ import {
 } from "react";
 import { products } from "@/data/products";
 import { promos } from "@/data/promos";
-import type { ManagedOffer, ManagedProduct, ProductQuantityOption, StorefrontConfig } from "@/types";
+import type { ManagedOffer, ManagedProduct, OfferRules, ProductQuantityOption, StorefrontConfig } from "@/types";
 
 const STORAGE_KEY = "syracuse-exoticz-storefront-content-v1";
 const LEGACY_STORAGE_KEY = "elevate-storefront-content-v1";
@@ -97,6 +97,28 @@ function ensureProductQuantities(product: ManagedProduct): ManagedProduct {
   };
 }
 
+function ensureOfferRules(offer: ManagedOffer): ManagedOffer {
+  const rules: OfferRules = {
+    autoApply: offer.rules?.autoApply ?? false,
+    allowManualApply: offer.rules?.allowManualApply ?? true,
+    discountType: offer.rules?.discountType ?? "percent",
+    discountValue: typeof offer.rules?.discountValue === "number" ? offer.rules.discountValue : 0,
+    minSubtotal: typeof offer.rules?.minSubtotal === "number" ? offer.rules.minSubtotal : undefined,
+    startDate: offer.rules?.startDate || undefined,
+    endDate: offer.rules?.endDate || undefined,
+    startTime: offer.rules?.startTime || undefined,
+    endTime: offer.rules?.endTime || undefined,
+    daysOfWeek: Array.isArray(offer.rules?.daysOfWeek)
+      ? offer.rules?.daysOfWeek.filter((day) => Number.isInteger(day) && day >= 0 && day <= 6)
+      : undefined,
+  };
+
+  return {
+    ...offer,
+    rules,
+  };
+}
+
 export function StorefrontContentProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<StorefrontState>(defaultState);
 
@@ -113,6 +135,7 @@ export function StorefrontContentProvider({ children }: { children: ReactNode })
       const migrated: StorefrontState = {
         ...parsed,
         products: parsed.products.map((product) => ensureProductQuantities(product)),
+        offers: parsed.offers.map((offer) => ensureOfferRules(offer)),
       };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
       window.localStorage.removeItem(LEGACY_STORAGE_KEY);
@@ -166,6 +189,12 @@ export function StorefrontContentProvider({ children }: { children: ReactNode })
       code: "",
       image: "/images/promo-deal-week.jpg",
       isActive: true,
+      rules: {
+        autoApply: false,
+        allowManualApply: true,
+        discountType: "percent",
+        discountValue: 15,
+      },
     };
 
     setState((prev) => ({ ...prev, offers: [newOffer, ...prev.offers] }));

@@ -6,7 +6,20 @@ import { X, Trash2 } from "lucide-react";
 import { useSiteStore } from "@/hooks/useSiteStore";
 
 export function CartDrawer() {
-  const { cartItems, isCartOpen, closeCart, removeFromCart, subtotal } = useSiteStore();
+  const {
+    cartItems,
+    isCartOpen,
+    closeCart,
+    removeFromCart,
+    subtotal,
+    discountTotal,
+    total,
+    autoAppliedDeals,
+    manualAppliedDeals,
+    availableManualDeals,
+    applyManualDeal,
+    removeManualDeal,
+  } = useSiteStore();
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
@@ -22,6 +35,16 @@ export function CartDrawer() {
       "Hi! I want to check out with these items:",
       ...itemLines,
       `Subtotal: $${subtotal.toFixed(2)}`,
+      ...(autoAppliedDeals.length + manualAppliedDeals.length > 0
+        ? [
+            "Applied deals:",
+            ...[...autoAppliedDeals, ...manualAppliedDeals].map(
+              (deal) => `- ${deal.title} (${deal.source}) -$${deal.amount.toFixed(2)}`,
+            ),
+            `Discounts: -$${discountTotal.toFixed(2)}`,
+          ]
+        : []),
+      `Total: $${total.toFixed(2)}`,
     ].join("\n");
 
     const smsUrl = `sms:?body=${encodeURIComponent(message)}`;
@@ -113,12 +136,78 @@ export function CartDrawer() {
               </article>
             ))
           )}
+
+          {cartItems.length > 0 ? (
+            <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+              <p className="text-xs font-black tracking-[0.12em] text-white">SPECIALS & DEALS</p>
+
+              {autoAppliedDeals.length > 0 ? (
+                <div className="mt-2 space-y-1.5">
+                  {autoAppliedDeals.map((deal) => (
+                    <div key={deal.id} className="flex items-center justify-between rounded-md border border-lime-300/35 bg-lime-300/10 px-2 py-1.5 text-xs">
+                      <span className="text-lime-200">{deal.title} (auto)</span>
+                      <span className="font-bold text-lime-200">-${deal.amount.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {manualAppliedDeals.length > 0 ? (
+                <div className="mt-2 space-y-1.5">
+                  {manualAppliedDeals.map((deal) => (
+                    <div key={deal.id} className="flex items-center justify-between rounded-md border border-cyan-300/35 bg-cyan-300/10 px-2 py-1.5 text-xs">
+                      <span className="text-cyan-100">{deal.title} (manual)</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-cyan-100">-${deal.amount.toFixed(2)}</span>
+                        <button
+                          type="button"
+                          className="rounded border border-cyan-200/40 px-1.5 py-0.5 text-[10px] font-bold text-cyan-100"
+                          onClick={() => removeManualDeal(deal.id)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {availableManualDeals.length > 0 ? (
+                <div className="mt-2 space-y-1.5">
+                  {availableManualDeals.map((offer) => (
+                    <div key={offer.id} className="flex items-center justify-between rounded-md border border-white/15 bg-black/20 px-2 py-1.5 text-xs">
+                      <span className="text-slate-200">{offer.title}</span>
+                      <button
+                        type="button"
+                        className="rounded border border-white/25 px-1.5 py-0.5 text-[10px] font-bold text-white"
+                        onClick={() => applyManualDeal(offer.id)}
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {autoAppliedDeals.length === 0 && manualAppliedDeals.length === 0 && availableManualDeals.length === 0 ? (
+                <p className="mt-2 text-xs text-slate-400">No eligible deals right now.</p>
+              ) : null}
+            </div>
+          ) : null}
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-[#0a1015] p-5">
           <div className="mb-3 flex items-center justify-between text-sm text-slate-300">
             <span>Subtotal</span>
             <span className="text-lg font-black text-white">${subtotal.toFixed(2)}</span>
+          </div>
+          <div className="mb-3 flex items-center justify-between text-sm text-slate-300">
+            <span>Discounts</span>
+            <span className="text-lg font-black text-lime-300">-${discountTotal.toFixed(2)}</span>
+          </div>
+          <div className="mb-3 flex items-center justify-between text-sm text-slate-300">
+            <span>Total</span>
+            <span className="text-xl font-black text-white">${total.toFixed(2)}</span>
           </div>
           <button
             disabled={cartItems.length === 0}

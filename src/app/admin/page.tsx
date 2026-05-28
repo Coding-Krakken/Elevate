@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useMemo,
   useState,
   type ChangeEvent,
   type ClipboardEvent,
@@ -40,6 +41,61 @@ const productAccentThemes = [
     badge: "border-fuchsia-300/45 bg-fuchsia-300/20 text-fuchsia-100",
   },
 ];
+
+type SpecialBackdropOption = {
+  path: string;
+  label: string;
+  keywords: string[];
+};
+
+const specialBackdropLibrary: SpecialBackdropOption[] = [
+  {
+    path: "/images/promo-happy-hour.jpg",
+    label: "Happy Hour Clock",
+    keywords: ["happy", "hour", "daily", "clock", "time"],
+  },
+  {
+    path: "/images/promo-deal-week.jpg",
+    label: "Deal of the Week",
+    keywords: ["deal", "week", "special", "sale"],
+  },
+  {
+    path: "/images/promo-new-customer.jpg",
+    label: "New Customer",
+    keywords: ["new", "customer", "first", "order", "welcome"],
+  },
+  {
+    path: "/images/hero-city.jpg",
+    label: "Neon City",
+    keywords: ["night", "city", "flash", "limited"],
+  },
+  {
+    path: "/images/hero-vape.jpg",
+    label: "Vape Accent",
+    keywords: ["vape", "pen", "cloud", "session"],
+  },
+  {
+    path: "/images/hero-box.jpg",
+    label: "Mystery Box",
+    keywords: ["bundle", "mystery", "box", "combo"],
+  },
+];
+
+function getRecommendedSpecialBackdrops(offer: ManagedOffer) {
+  const haystack = `${offer.id} ${offer.title} ${offer.subtitle} ${offer.eyebrow}`.toLowerCase();
+
+  const scored = specialBackdropLibrary.map((option) => {
+    const score = option.keywords.reduce((total, keyword) =>
+      haystack.includes(keyword) ? total + 1 : total,
+    0);
+    return {
+      ...option,
+      score,
+    };
+  });
+
+  return scored.sort((a, b) => b.score - a.score || a.label.localeCompare(b.label));
+}
 
 export default function AdminPage() {
   const [username, setUsername] = useState("");
@@ -710,6 +766,51 @@ function OfferEditor({
   previewIndex: number;
   fallbackIndex: number;
 }) {
+  const rules = offer.rules ?? {
+    autoApply: false,
+    allowManualApply: true,
+    discountType: "percent" as const,
+    discountValue: 0,
+  };
+
+  const dayOptions = [
+    { value: 0, label: "Sun" },
+    { value: 1, label: "Mon" },
+    { value: 2, label: "Tue" },
+    { value: 3, label: "Wed" },
+    { value: 4, label: "Thu" },
+    { value: 5, label: "Fri" },
+    { value: 6, label: "Sat" },
+  ];
+
+  const updateRules = (updates: Partial<typeof rules>) => {
+    onUpdate(offer.id, { rules: { ...rules, ...updates } });
+  };
+
+  const recommendedBackdrops = useMemo(
+    () => getRecommendedSpecialBackdrops(offer),
+    [offer.eyebrow, offer.id, offer.subtitle, offer.title],
+  );
+
+  const selectedBackdropIndex = recommendedBackdrops.findIndex((option) => option.path === offer.image);
+  const backdropIndex = selectedBackdropIndex >= 0 ? selectedBackdropIndex : 0;
+
+  const setBackdropByIndex = (index: number) => {
+    if (recommendedBackdrops.length === 0) {
+      return;
+    }
+    const normalized = ((index % recommendedBackdrops.length) + recommendedBackdrops.length) % recommendedBackdrops.length;
+    onUpdate(offer.id, { image: recommendedBackdrops[normalized].path });
+  };
+
+  const toggleDay = (day: number) => {
+    const existing = rules.daysOfWeek ?? [];
+    const next = existing.includes(day)
+      ? existing.filter((value) => value !== day)
+      : [...existing, day].sort((a, b) => a - b);
+    updateRules({ daysOfWeek: next });
+  };
+
   return (
     <article className="rounded-lg border border-white/10 bg-black/20 p-3">
       <div className="mb-2 flex items-center justify-between gap-2">
@@ -776,6 +877,176 @@ function OfferEditor({
             onChange={(event) => onUpdate(offer.id, { image: event.target.value })}
           />
         </Field>
+      </div>
+
+      <div className="mt-3 rounded-md border border-white/10 bg-black/25 p-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-xs font-semibold tracking-[0.08em] text-slate-300">Backdrop image library</p>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setBackdropByIndex(backdropIndex - 1)}
+              className="rounded border border-white/25 bg-black/30 px-2 py-1 text-[10px] font-semibold text-slate-200"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              onClick={() => setBackdropByIndex(backdropIndex + 1)}
+              className="rounded border border-white/25 bg-black/30 px-2 py-1 text-[10px] font-semibold text-slate-200"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+
+        <p className="mt-1 text-[11px] text-slate-400">
+          {selectedBackdropIndex >= 0
+            ? `Selected: ${recommendedBackdrops[backdropIndex]?.label} (${backdropIndex + 1}/${recommendedBackdrops.length})`
+            : "Selected image is custom (not in library). Choose an image below or use Previous/Next."}
+        </p>
+
+        <div className="mt-2 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-6">
+          {recommendedBackdrops.map((option, index) => {
+            const selected = option.path === offer.image;
+            return (
+              <button
+                key={option.path}
+                type="button"
+                onClick={() => onUpdate(offer.id, { image: option.path })}
+                className={`overflow-hidden rounded-md border text-left transition ${
+                  selected
+                    ? "border-lime-300/60 bg-lime-300/10"
+                    : "border-white/15 bg-black/20 hover:border-lime-300/35"
+                }`}
+                title={`${option.label}: ${option.path}`}
+              >
+                <img
+                  src={option.path}
+                  alt={option.label}
+                  className="h-16 w-full object-cover"
+                />
+                <p className="truncate px-1.5 py-1 text-[10px] font-semibold text-slate-200">{option.label}</p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="mt-3 rounded-md border border-white/10 bg-black/25 p-3">
+        <p className="text-xs font-semibold tracking-[0.08em] text-slate-300">Deal behavior</p>
+
+        <div className="mt-2 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+          <label className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/20 px-3 py-2 text-xs text-slate-200">
+            <input
+              type="checkbox"
+              checked={rules.autoApply}
+              onChange={(event) => updateRules({ autoApply: event.target.checked })}
+            />
+            Auto apply when eligible
+          </label>
+          <label className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-black/20 px-3 py-2 text-xs text-slate-200">
+            <input
+              type="checkbox"
+              checked={rules.allowManualApply}
+              onChange={(event) => updateRules({ allowManualApply: event.target.checked })}
+            />
+            Allow manual apply in cart
+          </label>
+          <Field label="Discount type">
+            <select
+              className={inputClass}
+              value={rules.discountType}
+              onChange={(event) =>
+                updateRules({ discountType: event.target.value as "percent" | "fixed" })
+              }
+            >
+              <option value="percent">Percent (%)</option>
+              <option value="fixed">Fixed ($)</option>
+            </select>
+          </Field>
+          <Field label={rules.discountType === "percent" ? "Discount percent" : "Discount amount"}>
+            <input
+              className={inputClass}
+              type="number"
+              min={0}
+              step="0.01"
+              value={rules.discountValue}
+              onChange={(event) =>
+                updateRules({ discountValue: Number(event.target.value) || 0 })
+              }
+            />
+          </Field>
+          <Field label="Min subtotal (optional)">
+            <input
+              className={inputClass}
+              type="number"
+              min={0}
+              step="0.01"
+              value={rules.minSubtotal ?? ""}
+              placeholder="Leave blank for no minimum"
+              onChange={(event) => {
+                const value = event.target.value;
+                updateRules({ minSubtotal: value ? Number(value) : undefined });
+              }}
+            />
+          </Field>
+          <Field label="Start date (optional)">
+            <input
+              className={inputClass}
+              type="date"
+              value={rules.startDate ?? ""}
+              onChange={(event) => updateRules({ startDate: event.target.value || undefined })}
+            />
+          </Field>
+          <Field label="End date (optional)">
+            <input
+              className={inputClass}
+              type="date"
+              value={rules.endDate ?? ""}
+              onChange={(event) => updateRules({ endDate: event.target.value || undefined })}
+            />
+          </Field>
+          <Field label="Start time (optional)">
+            <input
+              className={inputClass}
+              type="time"
+              value={rules.startTime ?? ""}
+              onChange={(event) => updateRules({ startTime: event.target.value || undefined })}
+            />
+          </Field>
+          <Field label="End time (optional)">
+            <input
+              className={inputClass}
+              type="time"
+              value={rules.endTime ?? ""}
+              onChange={(event) => updateRules({ endTime: event.target.value || undefined })}
+            />
+          </Field>
+        </div>
+
+        <div className="mt-2">
+          <p className="mb-1 text-xs font-semibold tracking-[0.08em] text-slate-300">Days of week (optional)</p>
+          <div className="flex flex-wrap gap-1.5">
+            {dayOptions.map((day) => {
+              const selected = rules.daysOfWeek?.includes(day.value);
+              return (
+                <button
+                  key={day.value}
+                  type="button"
+                  onClick={() => toggleDay(day.value)}
+                  className={`rounded border px-2 py-1 text-[10px] font-semibold ${
+                    selected
+                      ? "border-lime-300/60 bg-lime-300/15 text-lime-200"
+                      : "border-white/20 bg-black/20 text-slate-300"
+                  }`}
+                >
+                  {day.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
       <div className="mt-3 rounded-md border border-white/10 bg-black/25 p-3">

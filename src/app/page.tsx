@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Hero } from "@/components/sections/Hero";
 import { FulfillmentBar } from "@/components/sections/FulfillmentBar";
 import { FeaturedProducts } from "@/components/sections/FeaturedProducts";
@@ -8,10 +8,13 @@ import { CategoryGrid } from "@/components/sections/CategoryGrid";
 import { PromoBanners } from "@/components/sections/PromoBanners";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { useStorefrontContent } from "@/hooks/useStorefrontContent";
+import { useSiteStore } from "@/hooks/useSiteStore";
+import type { PromoItem } from "@/types";
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { products, offers, config } = useStorefrontContent();
+  const { applyManualDeal, toggleCart } = useSiteStore();
 
   const activeProducts = products.filter((product) => product.isActive);
   const activeOffers = offers.filter((offer) => offer.isActive);
@@ -30,6 +33,16 @@ export default function Home() {
     setSelectedCategory(null);
   }, [availableCategories, selectedCategory]);
 
+  const handlePromoCta = useCallback(
+    (promo: PromoItem) => {
+      if (promo.rules?.allowManualApply || promo.rules?.autoApply) {
+        applyManualDeal(promo.id);
+      }
+      toggleCart();
+    },
+    [applyManualDeal, toggleCart],
+  );
+
   return (
     <div className="mx-auto w-full max-w-[1540px] px-4 py-3 md:px-8 md:py-3">
       <Hero />
@@ -46,7 +59,7 @@ export default function Home() {
         </section>
       ) : null}
 
-      {config.showOffers ? <PromoBanners offers={activeOffers} /> : null}
+      {config.showOffers ? <PromoBanners offers={activeOffers} onCtaClick={handlePromoCta} /> : null}
       <Testimonials />
     </div>
   );

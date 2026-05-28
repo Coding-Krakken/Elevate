@@ -50,34 +50,84 @@ type SpecialBackdropOption = {
 
 const specialBackdropLibrary: SpecialBackdropOption[] = [
   {
+    path: "/images/backdrop-flower.jpg",
+    label: "Cannabis Flower",
+    keywords: ["flower", "bud", "kush", "strain", "indica", "sativa", "hybrid", "exotic"],
+  },
+  {
+    path: "/images/backdrop-neon.jpg",
+    label: "Neon Glow",
+    keywords: ["neon", "glow", "night", "flash", "limited", "exclusive", "vip"],
+  },
+  {
+    path: "/images/backdrop-smoke.jpg",
+    label: "Smoke & Vapor",
+    keywords: ["smoke", "vape", "vapor", "cloud", "session", "pre-roll", "joint"],
+  },
+  {
+    path: "/images/backdrop-botanical.jpg",
+    label: "Green Botanical",
+    keywords: ["green", "botanical", "natural", "organic", "fresh", "leaf", "plant"],
+  },
+  {
+    path: "/images/backdrop-party.jpg",
+    label: "Party Lights",
+    keywords: ["party", "celebrate", "weekend", "friday", "event", "launch", "grand"],
+  },
+  {
+    path: "/images/backdrop-golden.jpg",
+    label: "Golden Hour",
+    keywords: ["golden", "sunset", "premium", "luxury", "vip", "top", "shelf"],
+  },
+  {
+    path: "/images/backdrop-purple.jpg",
+    label: "Purple Haze",
+    keywords: ["purple", "haze", "exotic", "rare", "special", "grape", "berry"],
+  },
+  {
+    path: "/images/backdrop-sweets.jpg",
+    label: "Sweet Treats",
+    keywords: ["edible", "gummy", "candy", "sweet", "treat", "snack", "food"],
+  },
+  {
+    path: "/images/backdrop-fire.jpg",
+    label: "Fire & Heat",
+    keywords: ["fire", "hot", "heat", "blazing", "lit", "burn", "sale", "clearance"],
+  },
+  {
+    path: "/images/backdrop-ice.jpg",
+    label: "Ice Cold",
+    keywords: ["ice", "cold", "cool", "chill", "frost", "winter", "freeze", "mint"],
+  },
+  {
     path: "/images/promo-happy-hour.jpg",
-    label: "Happy Hour Clock",
-    keywords: ["happy", "hour", "daily", "clock", "time"],
+    label: "Happy Hour",
+    keywords: ["happy", "hour", "daily", "clock", "time", "afternoon"],
   },
   {
     path: "/images/promo-deal-week.jpg",
     label: "Deal of the Week",
-    keywords: ["deal", "week", "special", "sale"],
+    keywords: ["deal", "week", "special", "sale", "discount", "save"],
   },
   {
     path: "/images/promo-new-customer.jpg",
     label: "New Customer",
-    keywords: ["new", "customer", "first", "order", "welcome"],
+    keywords: ["new", "customer", "first", "order", "welcome", "signup"],
   },
   {
     path: "/images/hero-city.jpg",
     label: "Neon City",
-    keywords: ["night", "city", "flash", "limited"],
+    keywords: ["city", "urban", "street", "downtown", "nightlife"],
   },
   {
     path: "/images/hero-vape.jpg",
     label: "Vape Accent",
-    keywords: ["vape", "pen", "cloud", "session"],
+    keywords: ["vape", "pen", "cartridge", "concentrate", "dab"],
   },
   {
     path: "/images/hero-box.jpg",
     label: "Mystery Box",
-    keywords: ["bundle", "mystery", "box", "combo"],
+    keywords: ["bundle", "mystery", "box", "combo", "pack", "surprise"],
   },
 ];
 

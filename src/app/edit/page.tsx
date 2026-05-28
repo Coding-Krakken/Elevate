@@ -230,9 +230,10 @@ function EditorLayout() {
   const handleBackgroundClick = useCallback(
     (e: React.MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest("[data-editor-element]")) {
-        deselect();
+      if (target.closest("[data-editor-element]") || target.closest("[data-editor-ui]")) {
+        return;
       }
+      deselect();
     },
     [deselect],
   );

@@ -68,7 +68,11 @@ export function Toolbar() {
   return (
     <>
       {/* Main control bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-[150] safe-area-bottom">
+      <div
+        className="fixed bottom-0 left-0 right-0 z-[150] safe-area-bottom"
+        data-editor-ui
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="mx-2 mb-2 rounded-2xl border border-white/15 bg-[#0a0e13]/95 backdrop-blur-xl shadow-2xl">
           {/* Top row: context actions */}
           {selectedElement && !isPreview && (

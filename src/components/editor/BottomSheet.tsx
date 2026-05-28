@@ -23,7 +23,14 @@ export function BottomSheet({ open, onClose, title, children }: BottomSheetProps
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-end justify-center" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-[200] flex items-end justify-center"
+      data-editor-ui
+      onClick={(e) => {
+        e.stopPropagation();
+        onClose();
+      }}
+    >
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
         className="relative w-full max-w-lg max-h-[70vh] bg-[#0d1117] border border-white/10 rounded-t-2xl overflow-hidden animate-slide-up"

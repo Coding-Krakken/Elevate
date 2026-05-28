@@ -50,13 +50,25 @@ function generateId(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function createDefaultQuantityOption(): ProductQuantityOption {
+const DEFAULT_QUANTITY_TEMPLATES = [
+  { label: "1 oz", price: 0 },
+  { label: "2 oz", price: 0 },
+  { label: "1/4 lb", price: 0 },
+];
+
+function createDefaultQuantityOption(label = "1 oz", price = 0): ProductQuantityOption {
   return {
     id: generateId("qty"),
-    label: "1 unit",
-    price: 30,
+    label,
+    price,
     isActive: true,
   };
+}
+
+function createDefaultQuantities(): ProductQuantityOption[] {
+  return DEFAULT_QUANTITY_TEMPLATES.map((option) =>
+    createDefaultQuantityOption(option.label, option.price),
+  );
 }
 
 function ensureProductQuantities(product: ManagedProduct): ManagedProduct {
@@ -81,7 +93,7 @@ function ensureProductQuantities(product: ManagedProduct): ManagedProduct {
 
   return {
     ...product,
-    quantities: normalized.length > 0 ? normalized : [derivedFallback],
+    quantities: normalized.length > 0 ? normalized : maybeLegacy.size ? [derivedFallback] : createDefaultQuantities(),
   };
 }
 
@@ -122,7 +134,7 @@ export function StorefrontContentProvider({ children }: { children: ReactNode })
       strain: "HYBRID",
       description: "Product description",
       thc: "THC 20%",
-      quantities: [createDefaultQuantityOption()],
+      quantities: createDefaultQuantities(),
       image: "/images/product-neon-runtz.jpg",
       imagePosition: "center",
       isActive: true,

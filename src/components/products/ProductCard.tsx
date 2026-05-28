@@ -58,6 +58,7 @@ export function ProductCard({ product }: { product: Product }) {
       <h3 className="line-clamp-1 text-[15px] font-bold leading-tight text-white">{product.name}</h3>
       <p className="text-[11px] text-slate-400">{product.brand}</p>
       <p className="text-[10px] text-slate-500">{product.thc}</p>
+      <p className="mt-1 line-clamp-2 text-[11px] leading-tight text-slate-300">{product.description}</p>
 
       <div className="mt-2 flex flex-wrap gap-1">
         {activeQuantities.map((option) => {

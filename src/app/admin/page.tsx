@@ -11,6 +11,8 @@ import {
 import { useStorefrontContent } from "@/hooks/useStorefrontContent";
 import type { ManagedOffer, ManagedProduct, ProductQuantityOption } from "@/types";
 import ShareButton from "@/components/admin/ShareButton";
+import { ProductCard } from "@/components/products/ProductCard";
+import { PromoBannerCard } from "@/components/sections/PromoBanners";
 import { generateDeviceFingerprint } from "@/lib/fingerprint";
 
 const inputClass = "w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm text-white";
@@ -226,7 +228,7 @@ export default function AdminPage() {
           </button>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-5">
           {products.map((product) => (
             <ProductEditor
               key={product.id}
@@ -250,16 +252,24 @@ export default function AdminPage() {
           </button>
         </div>
 
-        <div className="space-y-3">
-          {offers.map((offer) => (
-            <OfferEditor
-              key={offer.id}
-              offer={offer}
-              onUpdate={updateOffer}
-              onDelete={deleteOffer}
-            />
-          ))}
-        </div>
+        {(() => {
+          const activeOfferIds = offers.filter((offer) => offer.isActive).map((offer) => offer.id);
+
+          return (
+            <div className="space-y-3">
+              {offers.map((offer, index) => (
+                <OfferEditor
+                  key={offer.id}
+                  offer={offer}
+                  onUpdate={updateOffer}
+                  onDelete={deleteOffer}
+                  previewIndex={Math.max(0, activeOfferIds.indexOf(offer.id))}
+                  fallbackIndex={index}
+                />
+              ))}
+            </div>
+          );
+        })()}
       </section>
     </div>
   );
@@ -344,6 +354,22 @@ function ProductEditor({
     onUpdate(product.id, { quantities });
   };
 
+  const quantityQuickFillOptions = [
+    "1 oz",
+    "2 oz",
+    "1/4 lb",
+    "1g",
+    "1/8 oz",
+    "1/4 oz",
+    "1/2 oz",
+    "0.5g",
+    "2g",
+    "3.5g",
+    "7g",
+    "14g",
+    "28g",
+  ];
+
   const addQuantityOption = () => {
     updateQuantities([
       ...product.quantities,
@@ -394,8 +420,8 @@ function ProductEditor({
   };
 
   return (
-    <article className="rounded-lg border border-white/10 bg-black/20 p-3">
-      <div className="mb-2 flex items-center justify-between gap-2">
+    <article className="rounded-xl border border-white/25 bg-[#091017] p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_18px_42px_rgba(0,0,0,0.35)]">
+      <div className="mb-3 flex items-center justify-between gap-2 border-b border-white/10 pb-2">
         <p className="text-xs font-semibold tracking-[0.08em] text-slate-300">{product.id}</p>
         <div className="flex items-center gap-3">
           <label className="inline-flex items-center gap-2 text-xs text-slate-200">
@@ -456,44 +482,78 @@ function ProductEditor({
             onChange={(event) => onUpdate(product.id, { thc: event.target.value })}
           />
         </Field>
-        <Field label="Image URL or path">
-          <input
-            className={inputClass}
-            value={product.image}
-            placeholder="https://... or /images/..."
-            onChange={(event) => applyImage(event.target.value)}
-          />
-        </Field>
-        <Field label="Upload image from device">
-          <input
-            type="file"
-            accept="image/*"
-            className={`${inputClass} file:mr-3 file:rounded-md file:border-0 file:bg-lime-300 file:px-2 file:py-1 file:text-xs file:font-black file:text-black`}
-            onChange={handleFileUpload}
-          />
-        </Field>
-        <Field label="Image horizontal position">
-          <select
-            className={inputClass}
-            value={imagePos.horizontal}
-            onChange={(event) => updateImagePosition(event.target.value, imagePos.vertical)}
-          >
-            <option value="left">Left</option>
-            <option value="center">Center</option>
-            <option value="right">Right</option>
-          </select>
-        </Field>
-        <Field label="Image vertical position">
-          <select
-            className={inputClass}
-            value={imagePos.vertical}
-            onChange={(event) => updateImagePosition(imagePos.horizontal, event.target.value)}
-          >
-            <option value="top">Top</option>
-            <option value="center">Center</option>
-            <option value="bottom">Bottom</option>
-          </select>
-        </Field>
+      </div>
+
+      <div className="mt-3 rounded-md border border-white/10 bg-black/25 p-3">
+        <p className="text-xs font-semibold tracking-[0.08em] text-slate-300">Image configuration</p>
+
+        <div className="mt-2 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+          <Field label="Image URL or path">
+            <input
+              className={inputClass}
+              value={product.image}
+              placeholder="https://... or /images/..."
+              onChange={(event) => applyImage(event.target.value)}
+            />
+          </Field>
+          <Field label="Upload image from device">
+            <input
+              type="file"
+              accept="image/*"
+              className={`${inputClass} file:mr-3 file:rounded-md file:border-0 file:bg-lime-300 file:px-2 file:py-1 file:text-xs file:font-black file:text-black`}
+              onChange={handleFileUpload}
+            />
+          </Field>
+          <Field label="Paste image or image URL">
+            <textarea
+              className={`${inputClass} min-h-[84px] resize-y`}
+              placeholder="Paste an image (Ctrl/Cmd+V) or paste an image URL here"
+              onPaste={handleImagePaste}
+            />
+          </Field>
+          <Field label="Image horizontal position">
+            <select
+              className={inputClass}
+              value={imagePos.horizontal}
+              onChange={(event) => updateImagePosition(event.target.value, imagePos.vertical)}
+            >
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+            </select>
+          </Field>
+          <Field label="Image vertical position">
+            <select
+              className={inputClass}
+              value={imagePos.vertical}
+              onChange={(event) => updateImagePosition(imagePos.horizontal, event.target.value)}
+            >
+              <option value="top">Top</option>
+              <option value="center">Center</option>
+              <option value="bottom">Bottom</option>
+            </select>
+          </Field>
+        </div>
+
+        <div className="mt-2">
+          <p className="mb-1 text-xs font-semibold tracking-[0.08em] text-slate-300">Image preview</p>
+          <div className="flex h-[150px] items-center justify-center overflow-hidden rounded-md border border-white/15 bg-black/35">
+            {product.image && !previewFailed ? (
+              <img
+                src={product.image}
+                alt={`${product.name} preview`}
+                className="h-full w-full object-cover"
+                onError={() => setPreviewFailed(true)}
+              />
+            ) : (
+              <p className="px-3 text-center text-xs text-slate-400">
+                {product.image ? "Preview unavailable for this image source." : "No image selected."}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {uploadError ? <p className="mt-2 text-xs text-red-300">{uploadError}</p> : null}
       </div>
 
       <div className="mt-3 rounded-md border border-white/10 bg-black/25 p-3">
@@ -549,7 +609,7 @@ function ProductEditor({
               </div>
               <div className="flex flex-wrap gap-1.5">
                 <span className="text-[10px] text-slate-400">Quick fill:</span>
-                {["1g", "1/8 oz", "1/4 oz", "1/2 oz", "1 oz", "0.5g", "2g", "3.5g", "7g", "14g", "28g"].map((fraction) => (
+                {quantityQuickFillOptions.map((fraction) => (
                   <button
                     key={fraction}
                     type="button"
@@ -570,35 +630,16 @@ function ProductEditor({
         </div>
       </div>
 
-      <div className="mt-2 grid gap-2 md:grid-cols-2">
-        <Field label="Paste image or image URL">
-          <textarea
-            className={`${inputClass} min-h-[84px] resize-y`}
-            placeholder="Paste an image (Ctrl/Cmd+V) or paste an image URL here"
-            onPaste={handleImagePaste}
-          />
-        </Field>
+      <div className="mt-3 rounded-md border border-white/10 bg-black/25 p-3">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-xs font-semibold tracking-[0.08em] text-slate-300">Main page preview</p>
+          <p className="text-[10px] uppercase tracking-[0.12em] text-slate-400">Featured products card</p>
+        </div>
 
-        <div>
-          <p className="mb-1 text-xs font-semibold tracking-[0.08em] text-slate-300">Image preview</p>
-          <div className="flex h-[150px] items-center justify-center overflow-hidden rounded-md border border-white/15 bg-black/35">
-            {product.image && !previewFailed ? (
-              <img
-                src={product.image}
-                alt={`${product.name} preview`}
-                className="h-full w-full object-cover"
-                onError={() => setPreviewFailed(true)}
-              />
-            ) : (
-              <p className="px-3 text-center text-xs text-slate-400">
-                {product.image ? "Preview unavailable for this image source." : "No image selected."}
-              </p>
-            )}
-          </div>
+        <div className="pointer-events-none max-w-[255px]">
+          <ProductCard product={product} />
         </div>
       </div>
-
-      {uploadError ? <p className="mt-2 text-xs text-red-300">{uploadError}</p> : null}
 
       <div className="mt-2">
         <Field label="Description">
@@ -617,10 +658,14 @@ function OfferEditor({
   offer,
   onUpdate,
   onDelete,
+  previewIndex,
+  fallbackIndex,
 }: {
   offer: ManagedOffer;
   onUpdate: (id: string, updates: Partial<ManagedOffer>) => void;
   onDelete: (id: string) => void;
+  previewIndex: number;
+  fallbackIndex: number;
 }) {
   return (
     <article className="rounded-lg border border-white/10 bg-black/20 p-3">
@@ -688,6 +733,28 @@ function OfferEditor({
             onChange={(event) => onUpdate(offer.id, { image: event.target.value })}
           />
         </Field>
+      </div>
+
+      <div className="mt-3 rounded-md border border-white/10 bg-black/25 p-3">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-xs font-semibold tracking-[0.08em] text-slate-300">Main page preview</p>
+          {offer.isActive ? (
+            <p className="text-[10px] uppercase tracking-[0.12em] text-lime-300">
+              Uses active offer position {previewIndex + 1}
+            </p>
+          ) : (
+            <p className="text-[10px] uppercase tracking-[0.12em] text-amber-300">
+              Inactive on main page
+            </p>
+          )}
+        </div>
+
+        <div className="pointer-events-none max-w-[680px]">
+          <PromoBannerCard
+            promo={offer}
+            index={offer.isActive ? previewIndex : fallbackIndex}
+          />
+        </div>
       </div>
     </article>
   );

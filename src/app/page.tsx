@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Hero } from "@/components/sections/Hero";
 import { FulfillmentBar } from "@/components/sections/FulfillmentBar";
 import { FeaturedProducts } from "@/components/sections/FeaturedProducts";
@@ -15,6 +15,20 @@ export default function Home() {
 
   const activeProducts = products.filter((product) => product.isActive);
   const activeOffers = offers.filter((offer) => offer.isActive);
+  const availableCategories = useMemo(
+    () => Array.from(new Set(activeProducts.map((product) => product.category))),
+    [activeProducts],
+  );
+
+  useEffect(() => {
+    if (!selectedCategory) {
+      return;
+    }
+    if (availableCategories.includes(selectedCategory)) {
+      return;
+    }
+    setSelectedCategory(null);
+  }, [availableCategories, selectedCategory]);
 
   return (
     <div className="mx-auto w-full max-w-[1540px] px-4 py-3 md:px-8 md:py-3">
@@ -27,6 +41,7 @@ export default function Home() {
           <CategoryGrid
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
+            availableCategories={availableCategories}
           />
         </section>
       ) : null}

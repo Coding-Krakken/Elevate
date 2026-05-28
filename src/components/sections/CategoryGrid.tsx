@@ -28,10 +28,12 @@ const icons = {
 interface CategoryGridProps {
   selectedCategory: string | null;
   onSelectCategory: (value: string | null) => void;
+  availableCategories: string[];
 }
 
-export function CategoryGrid({ selectedCategory, onSelectCategory }: CategoryGridProps) {
+export function CategoryGrid({ selectedCategory, onSelectCategory, availableCategories }: CategoryGridProps) {
   const { sections } = homePageContent;
+  const visibleCategories = categories.filter((category) => availableCategories.includes(category.slug));
 
   return (
     <section>
@@ -45,7 +47,7 @@ export function CategoryGrid({ selectedCategory, onSelectCategory }: CategoryGri
         </button>
       </div>
       <div className="grid grid-cols-2 gap-2">
-        {categories.map((category) => {
+        {visibleCategories.map((category) => {
           const Icon = icons[category.icon as keyof typeof icons];
           const active = selectedCategory === category.slug;
           return (

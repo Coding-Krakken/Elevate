@@ -13,6 +13,7 @@ import type { ManagedOffer, ManagedProduct, ProductQuantityOption } from "@/type
 import ShareButton from "@/components/admin/ShareButton";
 import { ProductCard } from "@/components/products/ProductCard";
 import { PromoBannerCard } from "@/components/sections/PromoBanners";
+import { categories } from "@/data/categories";
 import { generateDeviceFingerprint } from "@/lib/fingerprint";
 
 const inputClass = "w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm text-white";
@@ -445,6 +446,7 @@ function ProductEditor({
   };
 
   const accent = productAccentThemes[index % productAccentThemes.length];
+  const hasKnownCategory = categories.some((category) => category.slug === product.category);
 
   return (
     <article className={`rounded-xl border border-white/25 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_18px_42px_rgba(0,0,0,0.35)] ${accent.card}`}>
@@ -490,11 +492,20 @@ function ProductEditor({
           />
         </Field>
         <Field label="Category">
-          <input
+          <select
             className={inputClass}
-            value={product.category}
+            value={hasKnownCategory ? product.category : ""}
             onChange={(event) => onUpdate(product.id, { category: event.target.value })}
-          />
+          >
+            <option value="" disabled>
+              Select category
+            </option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.slug}>
+                {category.label}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label="Strain (HYBRID/SATIVA/INDICA)">
           <input

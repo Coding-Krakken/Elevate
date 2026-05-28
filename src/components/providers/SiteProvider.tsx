@@ -16,7 +16,7 @@ const AgeGate = dynamic(
 
 export function SiteProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isAdminRoute = pathname.startsWith("/admin");
+  const isAdminRoute = pathname.startsWith("/admin") || pathname.startsWith("/edit");
 
   return (
     <StorefrontContentProvider>

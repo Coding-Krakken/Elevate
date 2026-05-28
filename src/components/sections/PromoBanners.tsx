@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { useStorefrontContent } from "@/hooks/useStorefrontContent";
+import { toElementStyle } from "@/lib/style-overrides";
 import type { PromoItem } from "@/types";
 
 export function PromoBannerCard({
@@ -10,14 +12,24 @@ export function PromoBannerCard({
   index: number;
   onCtaClick?: (promo: PromoItem) => void;
 }) {
+  const { styleOverrides } = useStorefrontContent();
+  const styleOverride = styleOverrides?.[promo.id];
+
   return (
-    <article className="relative min-h-[162px] overflow-hidden rounded-xl border border-white/15 bg-[#0d1318] p-4">
+    <article
+      className="relative min-h-[162px] overflow-hidden rounded-xl border border-white/15 bg-[#0d1318] p-4"
+      style={toElementStyle(styleOverrides?.[promo.id])}
+    >
       <Image
         src={promo.image}
-        alt={promo.title}
+        alt={styleOverride?.imageAlt || promo.title}
         fill
         sizes="(min-width: 1024px) 33vw, 100vw"
         className="object-cover opacity-30"
+        style={{
+          objectFit: styleOverride?.objectFit ?? "cover",
+          objectPosition: styleOverride?.objectPosition ?? "center",
+        }}
       />
       <div
         className={`absolute inset-0 ${
@@ -72,11 +84,19 @@ export function PromoBanners({
   offers: PromoItem[];
   onCtaClick?: (promo: PromoItem) => void;
 }) {
+  const { styleOverrides, pageLayout } = useStorefrontContent();
+  const sectionLabel =
+    pageLayout.sections.find((section) => section.type === "promos")?.label ??
+    "HOT DEALS";
+
   return (
-    <section className="mt-3 grid gap-2.5 lg:grid-cols-3">
-      {offers.map((promo, index) => (
-        <PromoBannerCard key={promo.id} promo={promo} index={index} onCtaClick={onCtaClick} />
-      ))}
+    <section id="deals" className="mt-3" style={toElementStyle(styleOverrides?.["section-promos"])}>
+      <h2 className="mb-2.5 text-sm font-black tracking-[0.16em] text-white">{sectionLabel}</h2>
+      <div className="grid gap-2.5 lg:grid-cols-3">
+        {offers.map((promo, index) => (
+          <PromoBannerCard key={promo.id} promo={promo} index={index} onCtaClick={onCtaClick} />
+        ))}
+      </div>
     </section>
   );
 }

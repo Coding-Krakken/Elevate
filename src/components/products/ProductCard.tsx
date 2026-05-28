@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSiteStore } from "@/hooks/useSiteStore";
+import { useStorefrontContent } from "@/hooks/useStorefrontContent";
+import { toElementStyle } from "@/lib/style-overrides";
 import type { Product } from "@/types";
 
 const strainClasses = {
@@ -15,6 +17,8 @@ const strainClasses = {
 
 export function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useSiteStore();
+  const { styleOverrides } = useStorefrontContent();
+  const styleOverride = styleOverrides?.[product.id];
   const activeQuantities = useMemo(
     () => product.quantities.filter((option) => option.isActive),
     [product.quantities],
@@ -32,7 +36,10 @@ export function ProductCard({ product }: { product: Product }) {
   const canAdd = Boolean(selectedQuantity);
 
   return (
-    <article className="group relative rounded-xl border border-white/10 bg-gradient-to-b from-[#11171d] to-[#0c1015] p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition hover:border-lime-300/40">
+    <article
+      className="group relative rounded-xl border border-white/10 bg-gradient-to-b from-[#11171d] to-[#0c1015] p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition hover:border-lime-300/40"
+      style={toElementStyle(styleOverrides?.[product.id])}
+    >
       <span
         className={cn(
           "absolute left-3 top-3 z-10 rounded-full border px-2 py-0.5 text-[9px] font-bold tracking-[0.12em]",
@@ -45,11 +52,14 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative mb-2 h-[100px] overflow-hidden rounded-lg border border-white/10 bg-black/20">
         <Image
           src={product.image}
-          alt={product.name}
+          alt={styleOverride?.imageAlt || product.name}
           fill
           sizes="220px"
           className="object-cover transition duration-500 group-hover:scale-105"
-          style={{ objectPosition: product.imagePosition ?? "center" }}
+          style={{
+            objectFit: styleOverride?.objectFit ?? "cover",
+            objectPosition: styleOverride?.objectPosition ?? product.imagePosition ?? "center",
+          }}
         />
         <div className="absolute inset-0 bg-black/15" />
         <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/65 to-transparent" />

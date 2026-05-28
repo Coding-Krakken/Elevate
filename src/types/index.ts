@@ -140,3 +140,113 @@ export interface DeviceRegistrationResponse {
   error?: string;
   errorCode?: 'INVALID_TOKEN' | 'EXPIRED_TOKEN' | 'USED_TOKEN' | 'REGISTRATION_FAILED';
 }
+
+// Visual Editor Types
+
+export interface SectionConfig {
+  id: string;
+  type:
+    | "topBar"
+    | "header"
+    | "hero"
+    | "fulfillment"
+    | "products"
+    | "categories"
+    | "promos"
+    | "testimonials"
+    | "trust"
+    | "rewards"
+    | "footer";
+  visible: boolean;
+  order: number;
+  label?: string;
+}
+
+export interface PageLayout {
+  sections: SectionConfig[];
+}
+
+export interface HomepageContent {
+  hero: {
+    titleLine1: string;
+    titleLine2: string;
+    subtitle: string;
+    primaryCta: string;
+    primaryCtaHref: string;
+    secondaryCta: string;
+    secondaryCtaHref: string;
+    scriptLine1: string;
+    scriptLine2: string;
+    highlights: string[];
+  };
+  fulfillment: {
+    items: { title: string; subtitle: string }[];
+    rating: string;
+    reviewsLabel: string;
+  };
+  topBar: {
+    text: string;
+  };
+  header: {
+    brandLine1: string;
+    brandLine2: string;
+    logoHref: string;
+    accountHref: string;
+  };
+  footer: {
+    tagline: string;
+    columnTitle: string;
+    links: { label: string; href: string }[];
+    disclaimer: string;
+    copyright: string;
+  };
+  testimonials: {
+    viewAllLabel: string;
+    viewAllHref: string;
+    prevLabel: string;
+    nextLabel: string;
+  };
+  categories: {
+    viewAllLabel: string;
+  };
+}
+
+export interface StorefrontContent {
+  config: StorefrontConfig;
+  products: ManagedProduct[];
+  offers: ManagedOffer[];
+  homepage: HomepageContent;
+  testimonials: Review[];
+  categories: CategoryItem[];
+  pageLayout: PageLayout;
+  styleOverrides?: Record<string, ElementStyleOverrides>;
+}
+
+export interface ElementStyleOverrides {
+  fontSize?: string;
+  fontFamily?: string;
+  fontWeight?: string;
+  color?: string;
+  textAlign?: string;
+  letterSpacing?: string;
+  lineHeight?: string;
+  backgroundColor?: string;
+  padding?: string;
+  border?: string;
+  borderRadius?: string;
+  opacity?: number;
+  boxShadow?: string;
+  objectFit?: "cover" | "contain" | "fill";
+  objectPosition?: string;
+  imageAlt?: string;
+}
+
+export type EditorElementType = "text" | "image" | "section" | "product" | "offer" | "category" | "testimonial";
+
+export interface SelectedElement {
+  id: string;
+  type: EditorElementType;
+  sectionId: string;
+  path: string;
+  rect?: DOMRect;
+}

@@ -1,0 +1,246 @@
+{
+  "config": {
+    "pageTitle": "Syracuse Exoticz Main Storefront",
+    "pageSubtitle": "Browse every available product and active deals in one place.",
+    "showProducts": true,
+    "showOffers": true
+  },
+  "products": [
+    {
+      "id": "neon-runtz",
+      "name": "Neon Runtz",
+      "brand": "Premium Flower",
+      "category": "flower",
+      "strain": "HYBRID",
+      "description": "Indoor micro-batch",
+      "thc": "THC 24.6%",
+      "quantities": [
+        { "id": "1g", "label": "1g", "price": 18, "isActive": true },
+        { "id": "eighth", "label": "1/8 oz", "price": 45, "isActive": true },
+        { "id": "quarter", "label": "1/4 oz", "price": 80, "isActive": true }
+      ],
+      "image": "/images/product-neon-runtz.jpg",
+      "imagePosition": "center 42%",
+      "isActive": true
+    },
+    {
+      "id": "lemon-cherry-gelato",
+      "name": "Lemon Cherry Gelato",
+      "brand": "Indoor Flower",
+      "category": "flower",
+      "strain": "SATIVA",
+      "description": "Premium greenhouse",
+      "thc": "THC 22.1%",
+      "quantities": [
+        { "id": "1g", "label": "1g", "price": 16, "isActive": true },
+        { "id": "eighth", "label": "1/8 oz", "price": 42, "isActive": true },
+        { "id": "quarter", "label": "1/4 oz", "price": 76, "isActive": true }
+      ],
+      "image": "/images/product-lemon-gelato.jpg",
+      "imagePosition": "center 40%",
+      "isActive": true
+    },
+    {
+      "id": "blackberry-kush",
+      "name": "Blackberry Kush",
+      "brand": "Premium Flower",
+      "category": "flower",
+      "strain": "INDICA",
+      "description": "Hand-trimmed",
+      "thc": "THC 26.3%",
+      "quantities": [
+        { "id": "1g", "label": "1g", "price": 15, "isActive": true },
+        { "id": "eighth", "label": "1/8 oz", "price": 40, "isActive": true },
+        { "id": "quarter", "label": "1/4 oz", "price": 72, "isActive": true }
+      ],
+      "image": "/images/product-blackberry-kush.jpg",
+      "imagePosition": "center 36%",
+      "isActive": true
+    },
+    {
+      "id": "citrus-breeze",
+      "name": "Citrus Breeze",
+      "brand": "Live Resin Vape",
+      "category": "vapes",
+      "strain": "SATIVA",
+      "description": "Strain-specific oil",
+      "thc": "THC 85.2%",
+      "quantities": [
+        { "id": "0.5g", "label": "0.5g", "price": 35, "isActive": true },
+        { "id": "1g-cart", "label": "1g", "price": 60, "isActive": true }
+      ],
+      "image": "/images/product-citrus-breeze.jpg",
+      "imagePosition": "center",
+      "isActive": true
+    },
+    {
+      "id": "midnight-gummies",
+      "name": "Midnight Gummies",
+      "brand": "Artisan Edibles",
+      "category": "edibles",
+      "strain": "INDICA",
+      "description": "10mg/piece",
+      "thc": "100mg total",
+      "quantities": [
+        { "id": "10pack", "label": "10-pack", "price": 25, "isActive": true },
+        { "id": "20pack", "label": "20-pack", "price": 45, "isActive": true }
+      ],
+      "image": "/images/product-midnight-gummies.jpg",
+      "imagePosition": "center",
+      "isActive": true
+    }
+  ],
+  "offers": [
+    {
+      "id": "deal-week",
+      "eyebrow": "DEAL OF THE WEEK",
+      "title": "30% OFF",
+      "subtitle": "SELECT TOP SHELF FLOWER",
+      "cta": "SHOP THE DEAL",
+      "image": "/images/promo-deal-week.jpg",
+      "isActive": true,
+      "rules": {
+        "autoApply": true,
+        "allowManualApply": true,
+        "discountType": "percent",
+        "discountValue": 30,
+        "minSubtotal": 50
+      }
+    },
+    {
+      "id": "new-customer",
+      "eyebrow": "NEW CUSTOMER SPECIAL",
+      "title": "25% OFF",
+      "subtitle": "YOUR FIRST ORDER",
+      "cta": "USE CODE: SYRACUSE25",
+      "code": "SYRACUSE25",
+      "image": "/images/promo-new-customer.jpg",
+      "isActive": true,
+      "rules": {
+        "autoApply": false,
+        "allowManualApply": true,
+        "discountType": "percent",
+        "discountValue": 25
+      }
+    },
+    {
+      "id": "happy-hour",
+      "eyebrow": "DAILY HAPPY HOUR",
+      "title": "20% OFF",
+      "subtitle": "EVERYDAY 3PM - 6PM",
+      "cta": "SHOP NOW",
+      "image": "/images/promo-happy-hour.jpg",
+      "isActive": true,
+      "rules": {
+        "autoApply": true,
+        "allowManualApply": true,
+        "discountType": "percent",
+        "discountValue": 20,
+        "startTime": "15:00",
+        "endTime": "18:00"
+      }
+    }
+  ],
+  "homepage": {
+    "hero": {
+      "titleLine1": "ELEVATE",
+      "titleLine2": "EVERY MOMENT",
+      "subtitle": "PREMIUM CANNABIS. UNMATCHED VIBES.",
+      "primaryCta": "SHOP NOW",
+      "primaryCtaHref": "/",
+      "secondaryCta": "BROWSE DEALS",
+      "secondaryCtaHref": "#deals",
+      "scriptLine1": "Good VIBES",
+      "scriptLine2": "Higher TIMES",
+      "highlights": [
+        "PREMIUM QUALITY",
+        "EXPERTLY CURATED",
+        "100% SATISFACTION"
+      ]
+    },
+    "fulfillment": {
+      "items": [
+        { "title": "FAST DELIVERY", "subtitle": "As fast as 60 min" },
+        { "title": "EASY ORDERING", "subtitle": "Track in real time" }
+      ],
+      "rating": "4.9",
+      "reviewsLabel": "2,400+ Reviews"
+    },
+    "topBar": {
+      "text": "FREE EXPRESS DELIVERY ON ORDERS $75+"
+    },
+    "header": {
+      "brandLine1": "ELEVATE",
+      "brandLine2": "EXOTICZ",
+      "logoHref": "/",
+      "accountHref": "/admin"
+    },
+    "footer": {
+      "tagline": "PREMIUM CANNABIS. UNMATCHED VIBES.",
+      "columnTitle": "SHOP",
+      "links": [
+        { "label": "All Products", "href": "#" },
+        { "label": "Flower", "href": "#" },
+        { "label": "Edibles", "href": "#" },
+        { "label": "Vapes", "href": "#" },
+        { "label": "Concentrates", "href": "#" }
+      ],
+      "disclaimer": "18+ | For adults 21+ only. Keep out of reach of children. Follow all local laws.",
+      "copyright": "© 2024 Syracuse Exoticz. All rights reserved."
+    },
+    "testimonials": {
+      "viewAllLabel": "VIEW ALL",
+      "viewAllHref": "#reviews",
+      "prevLabel": "Prev",
+      "nextLabel": "Next"
+    },
+    "categories": {
+      "viewAllLabel": "VIEW ALL"
+    }
+  },
+  "testimonials": [
+    {
+      "id": "jessica-m",
+      "name": "Jessica M.",
+      "quote": "Best dispensary experience in Syracuse. The quality is always top notch and delivery is super fast. Highly recommend!",
+      "rating": 5
+    },
+    {
+      "id": "brandon-t",
+      "name": "Brandon T.",
+      "quote": "Syracuse Exoticz is my go-to in Central New York. Amazing deals, great customer service, and the products never disappoint.",
+      "rating": 5
+    },
+    {
+      "id": "alex-p",
+      "name": "Alex P.",
+      "quote": "I save so much and always get the best recommendations for Syracuse nights and weekends.",
+      "rating": 5
+    },
+    {
+      "id": "natalie-r",
+      "name": "Natalie R.",
+      "quote": "Love the vibe and the selection. Syracuse Exoticz really delivers for the Syracuse, New York area.",
+      "rating": 5
+    }
+  ],
+  "categories": [
+    { "id": "flower", "label": "FLOWER", "slug": "flower", "icon": "Flower2" },
+    { "id": "vapes", "label": "VAPES", "slug": "vapes", "icon": "Pipette" },
+    { "id": "edibles", "label": "EDIBLES", "slug": "edibles", "icon": "Cookie" },
+    { "id": "concentrates", "label": "CONCENTRATES", "slug": "concentrates", "icon": "Droplets" },
+    { "id": "pre-rolls", "label": "PRE-ROLLS", "slug": "pre-rolls", "icon": "Cigarette" },
+    { "id": "tinctures", "label": "TINCTURES", "slug": "tinctures", "icon": "FlaskConical" },
+    { "id": "topicals", "label": "TOPICALS", "slug": "topicals", "icon": "SprayCan" },
+    { "id": "accessories", "label": "ACCESSORIES", "slug": "accessories", "icon": "ShoppingBag" }
+  ],
+  "pageLayout": {
+    "sections": [
+      { "id": "hero", "type": "hero", "visible": true, "order": 0 },
+      { "id": "fulfillment", "type": "fulfillment", "visible": true, "order": 1 },
+      { "id": "products", "type": "products", "visible": true, "order": 2 },
+      { "id": "promos", "type": "promos", "visible": true, "order": 3 },
+      { "id": "testimonials", "type": "testimonials", "visible": true, "order": 4 }
+    ]
+  }
+}

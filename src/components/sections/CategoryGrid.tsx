@@ -10,9 +10,9 @@ import {
   ShoppingBag,
   SprayCan,
 } from "lucide-react";
-import { categories } from "@/data/categories";
-import { homePageContent } from "@/data/homepage";
+import { useStorefrontContent } from "@/hooks/useStorefrontContent";
 import { cn } from "@/lib/utils";
+import { toElementStyle } from "@/lib/style-overrides";
 
 const icons = {
   Flower2,
@@ -32,29 +32,33 @@ interface CategoryGridProps {
 }
 
 export function CategoryGrid({ selectedCategory, onSelectCategory, availableCategories }: CategoryGridProps) {
-  const { sections } = homePageContent;
+  const { categories, pageLayout, styleOverrides, homepage } = useStorefrontContent();
+  const sections = pageLayout.sections;
+  const categoriesSection = sections.find((section) => section.type === "categories");
   const visibleCategories = categories.filter((category) => availableCategories.includes(category.slug));
 
   return (
-    <section>
+    <section style={toElementStyle(styleOverrides?.["section-categories"])}>
       <div className="mb-2.5 flex items-center justify-between">
-        <h2 className="text-sm font-black tracking-[0.16em] text-white">{sections.categoriesTitle}</h2>
+        <h2 className="text-sm font-black tracking-[0.16em] text-white">{categoriesSection?.label || "SHOP CATEGORIES"}</h2>
         <button
           className="text-[10px] font-bold tracking-[0.12em] text-lime-300"
+          style={toElementStyle(styleOverrides?.["category-view-all"])}
           onClick={() => onSelectCategory(null)}
         >
-          {sections.categoriesViewAllLabel}
+          {homepage.categories.viewAllLabel}
         </button>
       </div>
       <div className="grid grid-cols-2 gap-2">
         {visibleCategories.map((category) => {
-          const Icon = icons[category.icon as keyof typeof icons];
+          const Icon = icons[category.icon as keyof typeof icons] ?? ShoppingBag;
           const active = selectedCategory === category.slug;
           return (
             <button
               type="button"
               key={category.id}
               onClick={() => onSelectCategory(active ? null : category.slug)}
+              style={toElementStyle(styleOverrides?.[`category-${category.id}`])}
               className={cn(
                 "group rounded-lg border px-3 py-3 text-left transition",
                 active

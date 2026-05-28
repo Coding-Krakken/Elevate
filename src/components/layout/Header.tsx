@@ -7,24 +7,41 @@ import {
   User,
 } from "lucide-react";
 import { useSiteStore } from "@/hooks/useSiteStore";
+import { useStorefrontContent } from "@/hooks/useStorefrontContent";
+import { toElementStyle } from "@/lib/style-overrides";
 
 export function Header() {
   const { cartCount, toggleCart } = useSiteStore();
+  const { styleOverrides, homepage } = useStorefrontContent();
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#060a0e]/95 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-[1540px] items-center gap-3 px-4 md:h-[60px] md:px-8">
-        <Link href="#" className="group flex min-w-[190px] items-center gap-2">
+        <Link
+          href={homepage.header.logoHref || "/"}
+          className="group flex min-w-[190px] items-center gap-2"
+          style={toElementStyle(styleOverrides?.["header-logo"])}
+        >
           <Leaf className="h-7 w-7 text-lime-300" />
           <div>
-            <p className="text-lg font-black leading-none tracking-[0.22em] text-white">SYRACUSE</p>
-            <p className="-mt-0.5 text-[9px] tracking-[0.2em] text-slate-400">EXOTICZ</p>
+            <p
+              className="text-lg font-black leading-none tracking-[0.22em] text-white"
+              style={toElementStyle(styleOverrides?.["header-brand-line-1"])}
+            >
+              {homepage.header.brandLine1}
+            </p>
+            <p
+              className="-mt-0.5 text-[9px] tracking-[0.2em] text-slate-400"
+              style={toElementStyle(styleOverrides?.["header-brand-line-2"])}
+            >
+              {homepage.header.brandLine2}
+            </p>
           </div>
         </Link>
 
         <div className="ml-auto flex items-center gap-2 md:gap-3">
           <Link
-            href="/admin"
+            href={homepage.header.accountHref || "/admin"}
             className="rounded-full border border-white/15 p-2 text-slate-200 transition hover:border-lime-300/60 hover:text-lime-300"
             aria-label="Account"
           >

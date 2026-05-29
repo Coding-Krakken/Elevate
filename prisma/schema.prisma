@@ -46,3 +46,20 @@ model AdminDevice {
 
   @@index([deviceId])
 }
+
+// Storefront content (single-row table for the live content JSON)
+model StorefrontContent {
+  id        String   @id @default("live")
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
+// Content history snapshots
+model ContentSnapshot {
+  id        String   @id @default(cuid())
+  name      String
+  data      Json
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

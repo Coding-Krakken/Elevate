@@ -1,13 +1,20 @@
 import { NextResponse } from "next/server";
-import { mkdir, readFile, writeFile } from "fs/promises";
+import { readFile } from "fs/promises";
 import { join } from "path";
+import prisma from "@/lib/prisma";
 import { isAuthorizedAdminRequest } from "@/lib/admin-auth";
 
 const CONTENT_FILE = join(process.cwd(), "data", "storefront-content.json");
-const HISTORY_DIR = join(process.cwd(), "data", "history");
 
 export async function GET() {
   try {
+    // Try database first (persisted edits)
+    const row = await prisma.storefrontContent.findUnique({ where: { id: "live" } });
+    if (row) {
+      return NextResponse.json(row.data);
+    }
+
+    // Fallback to filesystem (initial deployment default)
     const raw = await readFile(CONTENT_FILE, "utf-8");
     const data = JSON.parse(raw);
     return NextResponse.json(data);
@@ -35,16 +42,25 @@ export async function POST(request: Request) {
       }
     }
 
-    try {
-      const previous = await readFile(CONTENT_FILE, "utf-8");
-      const timestamp = new Date().toISOString().replaceAll(":", "-");
-      await mkdir(HISTORY_DIR, { recursive: true });
-      await writeFile(join(HISTORY_DIR, `storefront-content-${timestamp}.json`), previous, "utf-8");
-    } catch {
-      // Best-effort snapshotting. Save should not fail if backup write fails.
+    // Save a snapshot of previous content before overwriting
+    const previous = await prisma.storefrontContent.findUnique({ where: { id: "live" } });
+    if (previous) {
+      const timestamp = new Date().toISOString().replace(/:/g, "-");
+      await prisma.contentSnapshot.create({
+        data: {
+          name: `Auto-save ${timestamp}`,
+          data: previous.data as object,
+        },
+      });
     }
 
-    await writeFile(CONTENT_FILE, JSON.stringify(body, null, 2), "utf-8");
+    // Upsert content into database (persistent across deploys)
+    await prisma.storefrontContent.upsert({
+      where: { id: "live" },
+      update: { data: body },
+      create: { id: "live", data: body },
+    });
+
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed to save content" }, { status: 500 });

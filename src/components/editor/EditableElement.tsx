@@ -27,7 +27,8 @@ export function EditableElement({
 
   const isSelected = selectedElement?.id === elementId;
 
-  const handleSelect = () => {
+  const handleSelect = (e?: React.TouchEvent | React.MouseEvent) => {
+    e?.stopPropagation();
     const rect = ref.current?.getBoundingClientRect();
     select({
       id: elementId,

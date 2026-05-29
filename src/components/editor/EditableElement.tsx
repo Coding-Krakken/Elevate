@@ -81,7 +81,12 @@ export function EditableElement({
           : "hover:ring-1 hover:ring-white/20 rounded-md"
       } ${className}`}
       style={style}
-      {...longPressHandlers}
+      onMouseDown={(e) => { e.stopPropagation(); longPressHandlers.onMouseDown(e); }}
+      onMouseUp={(e) => { e.stopPropagation(); longPressHandlers.onMouseUp(e); }}
+      onMouseLeave={longPressHandlers.onMouseLeave}
+      onTouchStart={(e) => { e.stopPropagation(); longPressHandlers.onTouchStart(e); }}
+      onTouchMove={longPressHandlers.onTouchMove}
+      onTouchEnd={(e) => { e.stopPropagation(); longPressHandlers.onTouchEnd(e); }}
       data-editor-element={elementId}
       data-editor-type={elementType}
     >

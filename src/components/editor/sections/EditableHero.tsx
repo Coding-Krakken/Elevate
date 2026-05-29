@@ -12,15 +12,17 @@ export function EditableHero() {
   return (
     <EditableElement elementId="section-hero" elementType="section" sectionId="hero" path="homepage.hero">
       <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#060a0b] px-4 py-5 md:px-6 md:py-6">
-        <Image
-          src="/images/hero-backdrop-reference.png"
-          alt="Green neon product backdrop"
-          fill
-          priority
-          sizes="(min-width: 1024px) 1540px, 100vw"
-          className="object-cover object-center opacity-96"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(1,3,4,0.82)_0%,rgba(1,4,4,0.66)_21%,rgba(2,6,6,0.34)_40%,rgba(3,7,7,0.18)_58%,rgba(4,8,8,0.2)_100%)]" />
+        <EditableElement elementId="hero-image" elementType="image" sectionId="hero" path="homepage.hero.backgroundImage" className="absolute inset-0 z-[1]">
+          <Image
+            src={hero.backgroundImage ?? "/images/hero-backdrop-reference.png"}
+            alt="Green neon product backdrop"
+            fill
+            priority
+            sizes="(min-width: 1024px) 1540px, 100vw"
+            className="object-cover object-center opacity-96"
+          />
+        </EditableElement>
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(1,3,4,0.82)_0%,rgba(1,4,4,0.66)_21%,rgba(2,6,6,0.34)_40%,rgba(3,7,7,0.18)_58%,rgba(4,8,8,0.2)_100%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_31%_58%,rgba(124,255,58,0.12)_0,transparent_34%),repeating-radial-gradient(circle_at_31%_58%,rgba(124,255,58,0.12)_0_1px,transparent_1px_30px)] opacity-38" />
 
         <div className="relative grid items-end gap-4 lg:min-h-[370px] lg:grid-cols-[0.92fr_1.28fr]">

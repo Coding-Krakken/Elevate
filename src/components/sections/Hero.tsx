@@ -16,7 +16,7 @@ export function Hero() {
       style={toElementStyle(styleOverrides?.["section-hero"])}
     >
       <Image
-        src="/images/hero-backdrop-reference.png"
+        src={hero.backgroundImage ?? "/images/hero-backdrop-reference.png"}
         alt="Green neon product backdrop"
         fill
         priority

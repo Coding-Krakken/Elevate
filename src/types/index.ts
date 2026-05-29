@@ -178,6 +178,7 @@ export interface HomepageContent {
     scriptLine1: string;
     scriptLine2: string;
     highlights: string[];
+    backgroundImage?: string;
   };
   fulfillment: {
     items: { title: string; subtitle: string }[];

@@ -22,6 +22,21 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingAdminDevice) {
+      // Re-issue a fresh token so the cookie is always valid after login
+      const refreshToken = generateDeviceToken();
+      const refreshHash = await hashToken(refreshToken);
+
+      // Revoke old tokens for this fingerprint and create a fresh one
+      await prisma.registeredDevice.updateMany({
+        where: { fingerprint, revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
+      await prisma.registeredDevice.create({
+        data: { fingerprint, tokenHash: refreshHash },
+      });
+
+      await setDeviceCookie(refreshToken);
+
       return NextResponse.json({
         success: true,
         alreadyRegistered: true,

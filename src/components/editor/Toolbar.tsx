@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   Check,
   Eye,
@@ -63,6 +64,13 @@ export function Toolbar() {
     else if (type === "section") deleteSection(sectionId);
     deselect();
   };
+
+  // Auto-open the image menu when a standalone image element is selected
+  useEffect(() => {
+    if (selectedElement?.type === "image") {
+      openMenu("image");
+    }
+  }, [selectedElement, openMenu]);
 
   // Floating control bar (always visible at bottom on mobile)
   return (

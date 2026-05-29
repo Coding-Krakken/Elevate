@@ -11,6 +11,19 @@ const POSITION_GRID = [
   ["bottom left", "bottom center", "bottom right"],
 ];
 
+const BACKDROP_LIBRARY = [
+  "/images/backdrop-botanical.jpg",
+  "/images/backdrop-fire.jpg",
+  "/images/backdrop-flower.jpg",
+  "/images/backdrop-golden.jpg",
+  "/images/backdrop-ice.jpg",
+  "/images/backdrop-neon.jpg",
+  "/images/backdrop-party.jpg",
+  "/images/backdrop-purple.jpg",
+  "/images/backdrop-smoke.jpg",
+  "/images/backdrop-sweets.jpg",
+];
+
 export function ImageMenu() {
   const { selectedElement, setFieldValue, content } = useEditor();
   const [imageUrl, setImageUrl] = useState("");
@@ -27,6 +40,8 @@ export function ImageMenu() {
       : selectedElement.type === "offer" && offerIndex >= 0
         ? `offers.${offerIndex}.image`
         : selectedElement.path;
+
+  const isOfferImage = selectedElement.type === "offer" && offerIndex >= 0;
 
   const positionPath =
     selectedElement.type === "product" && productIndex >= 0
@@ -126,6 +141,36 @@ export function ImageMenu() {
           placeholder="https://... or /images/..."
         />
       </div>
+
+      {/* Backdrop image library for specials/deals */}
+      {isOfferImage && (
+        <div>
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5">Backdrop Image Library</label>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {BACKDROP_LIBRARY.map((src) => {
+              const active = imgValue === src;
+              return (
+                <button
+                  key={src}
+                  onClick={() => {
+                    setFieldValue(imagePath, src);
+                    setImageUrl(src);
+                  }}
+                  className={`overflow-hidden rounded-lg border transition ${
+                    active
+                      ? "border-lime-300/70 ring-1 ring-lime-300/60"
+                      : "border-white/15 hover:border-blue-400/70"
+                  }`}
+                  title={src}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt="Backdrop option" className="h-16 w-full object-cover" />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Position Grid */}
       <div>

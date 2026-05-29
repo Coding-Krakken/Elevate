@@ -35,7 +35,7 @@ export default function Home() {
 
   const handlePromoCta = useCallback(
     (promo: PromoItem) => {
-      if (promo.rules?.allowManualApply || promo.rules?.autoApply) {
+      if (promo.rules?.allowManualApply && !promo.rules?.autoApply) {
         applyManualDeal(promo.id);
       }
       toggleCart();

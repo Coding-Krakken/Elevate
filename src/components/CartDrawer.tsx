@@ -140,6 +140,7 @@ export function CartDrawer() {
           {cartItems.length > 0 ? (
             <div className="rounded-xl border border-white/10 bg-white/5 p-3">
               <p className="text-xs font-black tracking-[0.12em] text-white">SPECIALS & DEALS</p>
+              <p className="mt-1 text-[11px] text-slate-400">Only one deal can be active at a time.</p>
 
               {autoAppliedDeals.length > 0 ? (
                 <div className="mt-2 space-y-1.5">

@@ -119,7 +119,7 @@ export function SiteStoreProvider({ children }: { children: ReactNode }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isRewardsOpen, setIsRewardsOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [manualAppliedOfferIds, setManualAppliedOfferIds] = useState<string[]>([]);
+  const [manualAppliedOfferId, setManualAppliedOfferId] = useState<string | null>(null);
 
   const addToCart = useCallback((product: Product, option: ProductQuantityOption) => {
     const cartItemId = `${product.id}:${option.id}`;
@@ -156,7 +156,7 @@ export function SiteStoreProvider({ children }: { children: ReactNode }) {
 
   const clearCart = useCallback(() => {
     setCartItems([]);
-    setManualAppliedOfferIds([]);
+    setManualAppliedOfferId(null);
   }, []);
 
   const toggleCart = useCallback(() => {
@@ -179,12 +179,8 @@ export function SiteStoreProvider({ children }: { children: ReactNode }) {
     setToastMessage(null);
   }, []);
 
-  const applyManualDeal = useCallback((offerId: string) => {
-    setManualAppliedOfferIds((prev) => (prev.includes(offerId) ? prev : [...prev, offerId]));
-  }, []);
-
   const removeManualDeal = useCallback((offerId: string) => {
-    setManualAppliedOfferIds((prev) => prev.filter((id) => id !== offerId));
+    setManualAppliedOfferId((prev) => (prev === offerId ? null : prev));
   }, []);
 
   const cartCount = useMemo(
@@ -208,34 +204,93 @@ export function SiteStoreProvider({ children }: { children: ReactNode }) {
     [eligibleOffers],
   );
 
+  const autoEligibleOfferIds = useMemo(
+    () => new Set(autoEligibleOffers.map((offer) => offer.id)),
+    [autoEligibleOffers],
+  );
+
   const manualEligibleOffers = useMemo(
-    () => eligibleOffers.filter((offer) => offer.rules?.allowManualApply),
-    [eligibleOffers],
+    () =>
+      eligibleOffers.filter(
+        (offer) => offer.rules?.allowManualApply && !autoEligibleOfferIds.has(offer.id),
+      ),
+    [autoEligibleOfferIds, eligibleOffers],
+  );
+
+  const manualEligibleOfferIds = useMemo(
+    () => new Set(manualEligibleOffers.map((offer) => offer.id)),
+    [manualEligibleOffers],
+  );
+
+  const applyManualDeal = useCallback(
+    (offerId: string) => {
+      if (!manualEligibleOfferIds.has(offerId)) {
+        return;
+      }
+
+      setManualAppliedOfferId(offerId);
+    },
+    [manualEligibleOfferIds],
   );
 
   useEffect(() => {
-    setManualAppliedOfferIds((prev) => prev.filter((id) => manualEligibleOffers.some((offer) => offer.id === id)));
+    setManualAppliedOfferId((prev) => {
+      if (!prev) {
+        return null;
+      }
+      return manualEligibleOffers.some((offer) => offer.id === prev) ? prev : null;
+    });
   }, [manualEligibleOffers]);
 
+  const selectedManualOffer = useMemo(
+    () => manualEligibleOffers.find((offer) => offer.id === manualAppliedOfferId) ?? null,
+    [manualAppliedOfferId, manualEligibleOffers],
+  );
+
+  const bestAutoOffer = useMemo(() => {
+    let best: ManagedOffer | null = null;
+    let bestAmount = 0;
+
+    for (const offer of autoEligibleOffers) {
+      const amount = getOfferDiscountAmount(offer, subtotal);
+      if (amount > bestAmount) {
+        best = offer;
+        bestAmount = amount;
+      }
+    }
+
+    return best;
+  }, [autoEligibleOffers, subtotal]);
+
   const manualAppliedOffers = useMemo(
-    () => manualEligibleOffers.filter((offer) => manualAppliedOfferIds.includes(offer.id)),
-    [manualAppliedOfferIds, manualEligibleOffers],
+    () => (selectedManualOffer ? [selectedManualOffer] : []),
+    [selectedManualOffer],
   );
 
   const availableManualDeals = useMemo(
-    () => manualEligibleOffers.filter((offer) => !manualAppliedOfferIds.includes(offer.id)),
-    [manualAppliedOfferIds, manualEligibleOffers],
+    () =>
+      manualEligibleOffers.filter((offer) =>
+        selectedManualOffer ? offer.id !== selectedManualOffer.id : true,
+      ),
+    [manualEligibleOffers, selectedManualOffer],
   );
 
   const autoAppliedDeals = useMemo<AppliedCartDeal[]>(
-    () =>
-      autoEligibleOffers.map((offer) => ({
-        id: offer.id,
-        title: offer.title,
-        amount: getOfferDiscountAmount(offer, subtotal),
-        source: "auto",
-      })),
-    [autoEligibleOffers, subtotal],
+    () => {
+      if (selectedManualOffer || !bestAutoOffer) {
+        return [];
+      }
+
+      return [
+        {
+          id: bestAutoOffer.id,
+          title: bestAutoOffer.title,
+          amount: getOfferDiscountAmount(bestAutoOffer, subtotal),
+          source: "auto",
+        },
+      ];
+    },
+    [bestAutoOffer, selectedManualOffer, subtotal],
   );
 
   const manualAppliedDeals = useMemo<AppliedCartDeal[]>(

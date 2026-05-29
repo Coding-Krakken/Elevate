@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useEditor } from "@/hooks/useEditor";
+import { useImagePaste } from "@/hooks/useImagePaste";
 import { Upload } from "lucide-react";
 import { generateDeviceFingerprint } from "@/lib/fingerprint";
 
@@ -12,16 +13,21 @@ const POSITION_GRID = [
 ];
 
 const BACKDROP_LIBRARY = [
+  "/images/backdrop-bluesmoke.png",
   "/images/backdrop-botanical.jpg",
   "/images/backdrop-fire.jpg",
   "/images/backdrop-flower.jpg",
   "/images/backdrop-golden.jpg",
+  "/images/backdrop-greenflower.png",
+  "/images/backdrop-greenlivingroom.png",
   "/images/backdrop-ice.jpg",
   "/images/backdrop-neon.jpg",
   "/images/backdrop-party.jpg",
   "/images/backdrop-purple.jpg",
+  "/images/backdrop-purplesky.png",
   "/images/backdrop-smoke.jpg",
   "/images/backdrop-sweets.jpg",
+  "/images/backdrop-trippyclock.png",
 ];
 
 export function ImageMenu() {
@@ -29,17 +35,23 @@ export function ImageMenu() {
   const [imageUrl, setImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
 
-  if (!selectedElement) return null;
+  const productIndex = selectedElement ? content.products.findIndex((p) => p.id === selectedElement.id) : -1;
+  const offerIndex = selectedElement ? content.offers.findIndex((o) => o.id === selectedElement.id) : -1;
 
-  const productIndex = content.products.findIndex((p) => p.id === selectedElement.id);
-  const offerIndex = content.offers.findIndex((o) => o.id === selectedElement.id);
-
-  const imagePath =
-    selectedElement.type === "product" && productIndex >= 0
+  const imagePath = !selectedElement
+    ? ""
+    : selectedElement.type === "product" && productIndex >= 0
       ? `products.${productIndex}.image`
       : selectedElement.type === "offer" && offerIndex >= 0
         ? `offers.${offerIndex}.image`
         : selectedElement.path;
+
+  const { handlePaste, pasting } = useImagePaste((url) => {
+    setFieldValue(imagePath, url);
+    setImageUrl(url);
+  });
+
+  if (!selectedElement) return null;
 
   const isOfferImage = selectedElement.type === "offer" && offerIndex >= 0;
 
@@ -137,8 +149,9 @@ export function ImageMenu() {
           type="text"
           value={imageUrl || imgValue}
           onChange={(e) => handleUrlChange(e.target.value)}
+          onPaste={handlePaste}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-400 focus:outline-none min-h-[44px]"
-          placeholder="https://... or /images/..."
+          placeholder={pasting ? "Uploading pasted image..." : "https://... or /images/... (paste image)"}
         />
       </div>
 

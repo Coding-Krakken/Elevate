@@ -1,12 +1,18 @@
 "use client";
 
 import { useEditor } from "@/hooks/useEditor";
+import { useImagePaste } from "@/hooks/useImagePaste";
 import type { ManagedOffer, OfferRules } from "@/types";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function OfferMenu() {
   const { selectedElement, content, updateOffer } = useEditor();
+  const { handlePaste, pasting } = useImagePaste((url) => {
+    if (selectedElement && selectedElement.type === "offer") {
+      updateOffer(selectedElement.id, { image: url });
+    }
+  });
 
   if (!selectedElement || selectedElement.type !== "offer") return null;
 
@@ -86,7 +92,9 @@ export function OfferMenu() {
           type="text"
           value={offer.image}
           onChange={(e) => update({ image: e.target.value })}
+          onPaste={handlePaste}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-400 focus:outline-none min-h-[44px]"
+          placeholder={pasting ? "Uploading pasted image..." : "https://... or /images/... (paste image)"}
         />
       </div>
 

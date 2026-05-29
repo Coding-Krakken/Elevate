@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditor } from "@/hooks/useEditor";
+import { useImagePaste } from "@/hooks/useImagePaste";
 import type { ManagedProduct } from "@/types";
 
 const STRAIN_OPTIONS: ManagedProduct["strain"][] = ["HYBRID", "SATIVA", "INDICA"];
@@ -8,6 +9,11 @@ const CATEGORY_OPTIONS = ["flower", "vapes", "edibles", "concentrates", "pre-rol
 
 export function ProductMenu() {
   const { selectedElement, content, updateProduct } = useEditor();
+  const { handlePaste, pasting } = useImagePaste((url) => {
+    if (selectedElement && selectedElement.type === "product") {
+      updateProduct(selectedElement.id, { image: url });
+    }
+  });
 
   if (!selectedElement || selectedElement.type !== "product") return null;
 
@@ -102,7 +108,9 @@ export function ProductMenu() {
           type="text"
           value={product.image}
           onChange={(e) => update({ image: e.target.value })}
+          onPaste={handlePaste}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:border-blue-400 focus:outline-none min-h-[44px]"
+          placeholder={pasting ? "Uploading pasted image..." : "https://... or /images/... (paste image)"}
         />
       </div>
 

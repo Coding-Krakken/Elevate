@@ -72,10 +72,12 @@ export function EditableElement({
     return <>{children}</>;
   }
 
+  const hasPositionClass = /\b(absolute|fixed|sticky)\b/.test(className);
+
   return (
     <div
       ref={ref}
-      className={`relative cursor-pointer transition-all ${
+      className={`${hasPositionClass ? "" : "relative "}cursor-pointer transition-all ${
         isSelected
           ? "ring-2 ring-blue-400 ring-offset-1 ring-offset-transparent rounded-md"
           : "hover:ring-1 hover:ring-white/20 rounded-md"

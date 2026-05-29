@@ -12,7 +12,7 @@ export function EditableHero() {
   return (
     <EditableElement elementId="section-hero" elementType="section" sectionId="hero" path="homepage.hero">
       <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#060a0b] px-4 py-5 md:px-6 md:py-6">
-        <EditableElement elementId="hero-image" elementType="image" sectionId="hero" path="homepage.hero.backgroundImage" className="absolute inset-0 z-[1]">
+        <EditableElement elementId="hero-image" elementType="image" sectionId="hero" path="homepage.hero.backgroundImage" className="absolute inset-0">
           <Image
             src={hero.backgroundImage ?? "/images/hero-backdrop-reference.png"}
             alt="Green neon product backdrop"

@@ -51,6 +51,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, url: relativeUrl });
   } catch (error) {
     console.error("UPLOAD ERROR", error);
+
+    // Serverless platforms often have a read-only filesystem.
+    // Fall back to returning a data URL so the image can still be persisted
+    // inside storefront content stored in the database.
+    try {
+      const formData = await request.formData();
+      const file = formData.get("file");
+      if (file && typeof file === "object" && "arrayBuffer" in file) {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const dataUrl = `data:${file.type};base64,${buffer.toString("base64")}`;
+        return NextResponse.json({ success: true, url: dataUrl, storage: "inline" });
+      }
+    } catch {}
+
     return NextResponse.json({ error: error instanceof Error ? error.message : "Failed to upload image" }, { status: 500 });
   }
 }

@@ -404,13 +404,15 @@ export function EditorProvider({
         },
         body: JSON.stringify(content),
       });
-      if (res.ok) {
-        savedContentRef.current = content;
-        setIsDirty(false);
-        window.localStorage.removeItem(DRAFT_KEY);
-        if (navigator.vibrate) {
-          navigator.vibrate([30, 50, 30]);
-        }
+      if (!res.ok) {
+        const msg = await res.text();
+        throw new Error(msg || `Save failed (${res.status})`);
+      }
+      savedContentRef.current = content;
+      setIsDirty(false);
+      window.localStorage.removeItem(DRAFT_KEY);
+      if (navigator.vibrate) {
+        navigator.vibrate([30, 50, 30]);
       }
     } finally {
       setIsSaving(false);
@@ -438,6 +440,12 @@ export function EditorProvider({
     },
     [updateContent],
   );
+
+  useEffect(() => {
+    if (!isDirty || isSaving) return;
+    const t=setTimeout(()=>{ void save(); },1500);
+    return ()=>clearTimeout(t);
+  }, [content, isDirty, isSaving, save]);
 
   const canUndo = historyRef.current.past.length > 0;
   const canRedo = historyRef.current.future.length > 0;

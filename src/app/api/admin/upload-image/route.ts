@@ -16,6 +16,10 @@ function extFromMime(mime: string) {
   return "bin";
 }
 
+function dataUrlFromBuffer(mime: string, buffer: Buffer) {
+  return `data:${mime};base64,${buffer.toString("base64")}`;
+}
+
 export async function POST(request: Request) {
   try {
     const authorized = await isAuthorizedAdminRequest(request);
@@ -30,41 +34,42 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    if (!ALLOWED_TYPES.has(file.type)) {
+    const upload = file as File;
+
+    if (!ALLOWED_TYPES.has(upload.type)) {
       return NextResponse.json({ error: "Unsupported image format" }, { status: 400 });
     }
 
-    if (file.size > MAX_UPLOAD_BYTES) {
+    if (upload.size > MAX_UPLOAD_BYTES) {
       return NextResponse.json({ error: "File too large (max 8MB)" }, { status: 400 });
     }
 
-    const ext = extFromMime(file.type);
-    const safeName = `${Date.now()}-${randomUUID()}.${ext}`;
-    const relativeUrl = `/images/uploads/${safeName}`;
-    const absoluteDir = join(process.cwd(), "public", "images", "uploads");
-    const absolutePath = join(absoluteDir, safeName);
+    const buffer = Buffer.from(await upload.arrayBuffer());
 
-    await mkdir(absoluteDir, { recursive: true });
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(absolutePath, buffer);
+    try {
+      const ext = extFromMime(upload.type);
+      const safeName = `${Date.now()}-${randomUUID()}.${ext}`;
+      const relativeUrl = `/images/uploads/${safeName}`;
+      const absoluteDir = join(process.cwd(), "public", "images", "uploads");
+      const absolutePath = join(absoluteDir, safeName);
 
-    return NextResponse.json({ success: true, url: relativeUrl });
+      await mkdir(absoluteDir, { recursive: true });
+      await writeFile(absolutePath, buffer);
+
+      return NextResponse.json({ success: true, url: relativeUrl, storage: "filesystem" });
+    } catch (writeError) {
+      console.warn("Filesystem upload unavailable; using inline image fallback", writeError);
+      return NextResponse.json({
+        success: true,
+        url: dataUrlFromBuffer(upload.type, buffer),
+        storage: "inline",
+      });
+    }
   } catch (error) {
     console.error("UPLOAD ERROR", error);
-
-    // Serverless platforms often have a read-only filesystem.
-    // Fall back to returning a data URL so the image can still be persisted
-    // inside storefront content stored in the database.
-    try {
-      const formData = await request.formData();
-      const file = formData.get("file");
-      if (file && typeof file === "object" && "arrayBuffer" in file) {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const dataUrl = `data:${file.type};base64,${buffer.toString("base64")}`;
-        return NextResponse.json({ success: true, url: dataUrl, storage: "inline" });
-      }
-    } catch {}
-
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Failed to upload image" }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to upload image" },
+      { status: 500 },
+    );
   }
 }

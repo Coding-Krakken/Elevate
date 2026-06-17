@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get("file");
 
-    if (!(file instanceof File)) {
+    if (!file || typeof file !== "object" || !("arrayBuffer" in file)) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
@@ -49,7 +49,8 @@ export async function POST(request: Request) {
     await writeFile(absolutePath, buffer);
 
     return NextResponse.json({ success: true, url: relativeUrl });
-  } catch {
-    return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
+  } catch (error) {
+    console.error("UPLOAD ERROR", error);
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Failed to upload image" }, { status: 500 });
   }
 }

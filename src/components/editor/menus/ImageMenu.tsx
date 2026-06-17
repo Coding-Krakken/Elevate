@@ -34,6 +34,7 @@ export function ImageMenu() {
   const { selectedElement, setFieldValue, content } = useEditor();
   const [imageUrl, setImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
 
   const productIndex = selectedElement ? content.products.findIndex((p) => p.id === selectedElement.id) : -1;
   const offerIndex = selectedElement ? content.offers.findIndex((o) => o.id === selectedElement.id) : -1;
@@ -96,6 +97,8 @@ export function ImageMenu() {
       });
 
       if (!response.ok) {
+        const txt = await response.text();
+        setUploadError(`Upload failed (${response.status}) ${txt}`);
         return;
       }
 
@@ -103,9 +106,10 @@ export function ImageMenu() {
       if (typeof data?.url === "string") {
         setFieldValue(imagePath, data.url);
         setImageUrl(data.url);
+        setUploadError("");
       }
-    } catch {
-      // Keep UX silent for now; menu still allows manual URL entry.
+    } catch (e) {
+      setUploadError(e instanceof Error ? e.message : "Upload failed");
     } finally {
       setUploading(false);
     }
@@ -141,6 +145,8 @@ export function ImageMenu() {
           />
         </label>
       </div>
+
+      {uploadError && <div className="text-red-400 text-xs break-all">{uploadError}</div>}
 
       {/* URL Input */}
       <div>

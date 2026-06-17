@@ -16,6 +16,7 @@ import { ProductCard } from "@/components/products/ProductCard";
 import { PromoBannerCard } from "@/components/sections/PromoBanners";
 import { categories } from "@/data/categories";
 import { generateDeviceFingerprint } from "@/lib/fingerprint";
+import { prepareImageForUpload } from "@/lib/client-image";
 
 const inputClass = "w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm text-white";
 const ADMIN_USERNAME = "admin@syracuseexoticz.com";
@@ -475,8 +476,9 @@ function ProductEditor({
     if (!file) return;
     try {
       const fingerprint = await generateDeviceFingerprint();
+      const uploadFile = await prepareImageForUpload(file);
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", uploadFile);
       const response = await fetch("/api/admin/upload-image", { method:"POST", headers:{"x-device-fingerprint": fingerprint}, body: formData});
       if (response.ok) {
         const data = await response.json();

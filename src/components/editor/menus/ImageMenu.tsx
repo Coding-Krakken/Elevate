@@ -5,6 +5,7 @@ import { useEditor } from "@/hooks/useEditor";
 import { useImagePaste } from "@/hooks/useImagePaste";
 import { Upload } from "lucide-react";
 import { generateDeviceFingerprint } from "@/lib/fingerprint";
+import { prepareImageForUpload } from "@/lib/client-image";
 
 const POSITION_GRID = [
   ["top left", "top center", "top right"],
@@ -85,8 +86,9 @@ export function ImageMenu() {
     setUploading(true);
     try {
       const fingerprint = await generateDeviceFingerprint();
+      const uploadFile = await prepareImageForUpload(file);
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", uploadFile);
 
       const response = await fetch("/api/admin/upload-image", {
         method: "POST",

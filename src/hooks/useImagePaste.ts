@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { generateDeviceFingerprint } from "@/lib/fingerprint";
+import { prepareImageForUpload } from "@/lib/client-image";
 
 function fileToDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -55,7 +56,8 @@ export function useImagePaste(onUploaded: (url: string) => void) {
       try {
         const fingerprint = await generateDeviceFingerprint();
         const formData = new FormData();
-        formData.append("file", imageFile);
+        const uploadFile = await prepareImageForUpload(imageFile);
+        formData.append("file", uploadFile);
 
         const response = await fetch("/api/admin/upload-image", {
           method: "POST",

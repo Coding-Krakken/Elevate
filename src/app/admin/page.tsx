@@ -166,7 +166,14 @@ export default function AdminPage() {
     deleteOffer,
     updateConfig,
     resetDefaults,
+    persistContent,
   } = useStorefrontContent();
+
+  useEffect(() => {
+    if (!isAuthed) return;
+    const t=setTimeout(()=>{ void persistContent(); },800);
+    return ()=>clearTimeout(t);
+  }, [products, offers, config, isAuthed, persistContent]);
 
   useEffect(() => {
     const value = window.localStorage.getItem(AUTH_KEY);
@@ -462,9 +469,21 @@ function ProductEditor({
     reader.readAsDataURL(file);
   };
 
-  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    readAndApplyFile(event.target.files?.[0] ?? null);
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
     event.target.value = "";
+    if (!file) return;
+    try {
+      const fingerprint = await generateDeviceFingerprint();
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/admin/upload-image", { method:"POST", headers:{"x-device-fingerprint": fingerprint}, body: formData});
+      if (response.ok) {
+        const data = await response.json();
+        if (data?.url) { applyImage(data.url); return; }
+      }
+    } catch {}
+    readAndApplyFile(file);
   };
 
   const handleImagePaste = (event: ClipboardEvent<HTMLTextAreaElement>) => {
